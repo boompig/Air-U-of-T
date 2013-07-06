@@ -21,9 +21,9 @@ Second assignment for CSC309
 
 #### Booking a Flight
 
-1. [Collect flight info](#Flight-Info)
-2. [Get seat info](#Seat-Info)
-3. [Get billing info](#Billing-Info)
+1. [Collect flight info](#flight-info)
+2. [Get seat info](#seat-info)
+3. [Get billing info](#billing-info)
 
 ##### Flight Info
 
