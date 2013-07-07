@@ -72,3 +72,7 @@ Enforce the following validation rules:
 * Only 1 ticket can be bought at a time
 * All tickets cost $20 
 
+## Libraries Used
+
+* JQuery
+* JQuery UI
