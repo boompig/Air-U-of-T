@@ -31,8 +31,11 @@ Summary:
 
 Breakdown:
 1. [Collect flight info](#flight-info)
+
 2. [Get seat info](#seat-info)
+
 3. [Get billing info](#billing-info)
+
 4. [Display order summary](#summary-info)
 
 ##### Flight Info
@@ -187,6 +190,7 @@ A ticket for a single person. Highly dynamic, created for each ticket that is bo
 
 NOTE:
 1. FirePHP Console is only being used for development to better track errors
+
 2. FirePHP is not included in this repo. You have to install it seperately. Instructions are [here](http://www.firephp.org/HQ/Learn.htm)
 
 
