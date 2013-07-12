@@ -178,8 +178,19 @@ Fields:
 About:
 A ticket for a single person. Highly dynamic, created for each ticket that is booked.
 
-## Libraries Used
+## Third-Party Tools Used
+
+### PHP
+
+* CodeIgniter Framework
+* FirePHP Console
+
+NOTE:
+1. FirePHP Console is only being used for development to better track errors
+2. FirePHP is not included in this repo. You have to install it seperately. Instructions are [here](http://www.firephp.org/HQ/Learn.htm)
+
+
+### Javascript
 
 * JQuery
-* JQuery UI
 
