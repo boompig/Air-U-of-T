@@ -5,24 +5,6 @@
  */
 class HTML_Utils extends CI_Model {
 	/**
-	 * Single instance of this class.
-	 */
-	private static $instance;
-	
-	function get_instance() {
-		if (! isset(self::$instance)) {
-			self::$instance = new self();
-		}
-		
-		return self::$instance;
-	}
-	
-	function __construct() {
-		parent::__construct();
-	}
-
-
-	/**
 	 * Return an associative array for everything that's needed for a text input with the given name.
 	 * @param input_name The name of the input field.
 	 */

@@ -4,7 +4,6 @@ header('Pragma: no-cache'); // HTTP 1.0.
 header('Expires: 0'); // Proxies.
 
 $this->load->model("html_utils");
-$u = HTML_Utils::get_instance();
 ?>
 
 <!DOCTYPE html>
@@ -85,13 +84,13 @@ $u = HTML_Utils::get_instance();
 			// form 1 - redo information from before
 			echo form_open("airuoft/searchFlights");
 			echo form_label("From");
-			echo form_dropdown("from", $campus_options, $_SESSION['from'], $u->get_dropdown_options(array("id"=>"from", "class"=>"campusChooser")));
+			echo form_dropdown("from", $campus_options, $_SESSION['from'], HTML_Utils::get_dropdown_options(array("id"=>"from", "class"=>"campusChooser")));
 			
 			echo form_label('To');
-			echo form_dropdown("to", $campus_options, $_SESSION['to'], $u->get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
+			echo form_dropdown("to", $campus_options, $_SESSION['to'], HTML_Utils::get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
 			
 			echo form_label('Date');
-			$arr = $u->get_input_array("date");
+			$arr = HTML_Utils::get_input_array("date");
 			$arr["value"] = $_SESSION['date'];
 			echo form_input($arr);
 			echo form_submit("search", "Search Flights");
@@ -106,7 +105,7 @@ $u = HTML_Utils::get_instance();
 			
 			echo form_open("airuoft/searchSeats");
 			echo form_label("Flight Time");
-			echo form_dropdown("time", $time_options, $u->get_dropdown_options(array("id"=>"time")));
+			echo form_dropdown("time", $time_options, HTML_Utils::get_dropdown_options(array("id"=>"time")));
 			echo form_submit("submit", "Proceed to seat selection");
 			echo form_close();
 		?>

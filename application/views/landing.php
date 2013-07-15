@@ -4,7 +4,6 @@ header('Pragma: no-cache'); // HTTP 1.0.
 header('Expires: 0'); // Proxies.
 
 $this->load->model("html_utils");
-$u = HTML_Utils::get_instance();
 
 ?>
 
@@ -108,13 +107,13 @@ $u = HTML_Utils::get_instance();
 				);
 				
 				echo form_label('From');
-				echo form_dropdown("from", $campus_options, "", $u->get_dropdown_options(array("id"=>"from", "class"=>"campusChooser")));
+				echo form_dropdown("from", $campus_options, "", HTML_Utils::get_dropdown_options(array("id"=>"from", "class"=>"campusChooser")));
 				
 				echo form_label('To');
-				echo form_dropdown("to", $campus_options, "", $u->get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
+				echo form_dropdown("to", $campus_options, "", HTML_Utils::get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
 				
 				echo form_label('Date');
-				echo form_input($u->get_input_array("date"));
+				echo form_input(HTML_Utils::get_input_array("date"));
 				
 				echo form_submit('search', 'Search Flights');
 				echo form_close();
