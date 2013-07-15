@@ -76,7 +76,6 @@ $u = HTML_Utils::get_instance();
 		
 			$(function() {
 				$(".campusChooser").change(function() {
-					console.log("here");
 					changeOtherCampus($(this).attr("id"), $(this).val());
 				});
 				
@@ -84,8 +83,6 @@ $u = HTML_Utils::get_instance();
 				$(".campusChooser").find("option[value='']").attr("disabled", "disabled");
 				
 				$("#date").datepicker({
-					numberOfMonths: 2,
-					showButtonPanel: true,
 					minDate: "+1D",
 					maxDate: "+14D"
 				});
