@@ -3,26 +3,8 @@ header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
 header('Pragma: no-cache'); // HTTP 1.0.
 header('Expires: 0'); // Proxies.
 
-/**
- * Return an associative array for everything that's needed for a text input with the given name.
- * @param input_name The name of the input field.
- */
-function get_input_array($input_name) {
-	return array("name" => $input_name, "id" => $input_name);
-}
-
-/**
- * Given an associative array, return an options string to add as 4th parameter to input_dropdown.
- */
-function get_dropdown_options($arr) {
-	$a2 = array();
-	
-	foreach ($arr as $key => $value) {
-		$a2[] = $key . "='" . $value . "'";
-	}
-	
-	return join(" ", $a2);
-}
+$this->load->model("html_utils");
+$u = HTML_Utils::get_instance();
 
 ?>
 
@@ -98,6 +80,9 @@ function get_dropdown_options($arr) {
 					changeOtherCampus($(this).attr("id"), $(this).val());
 				});
 				
+				// couldn't figure out how to do this in CI, so just using JS instead
+				$(".campusChooser").find("option[value='']").attr("disabled", "disabled");
+				
 				$("#date").datepicker({
 					numberOfMonths: 2,
 					showButtonPanel: true
@@ -118,20 +103,19 @@ function get_dropdown_options($arr) {
 				echo form_open('airuoft/searchFlights');
 				
 				$campus_options = array(
-					"" => " -- Select a Campus --",
+					"" => " -- Choose a Campus --",
 					"UTSG" => "St. George",
 					"UTM" => "Mississauga"
 				);
 				
 				echo form_label('From');
-				echo form_dropdown("from", $campus_options, "", get_dropdown_options(array("id"=>"from", "class"=>"campusChooser")));
+				echo form_dropdown("from", $campus_options, "", $u->get_dropdown_options(array("id"=>"from", "class"=>"campusChooser")));
 				
-				// also a drop-down... 
 				echo form_label('To');
-				echo form_dropdown("to", $campus_options, "", get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
+				echo form_dropdown("to", $campus_options, "", $u->get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
 				
 				echo form_label('Date');
-				echo form_input(get_input_array("date"));
+				echo form_input($u->get_input_array("date"));
 				
 				echo form_submit('search', 'Search Flights');
 				echo form_close();

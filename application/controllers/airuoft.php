@@ -35,17 +35,48 @@ class AirUofT extends CI_Controller {
 	}
 	
 	/**
-	 * This function is called by landing.php to search for flights.
+	 * This function is called by landing.php (or alternatively flightinfo.php) to search for flights.
 	 * Load the flights into an array 
-	 * It is expected that the $_REQUEST parameter have the date set in this format: 'dd/mm/yyyy'
+	 * It is expected that the $_REQUEST has the following set: parameter have the date set in this format: 'dd/mm/yyyy'
+	 * 
+	 * Sets the following session variables:
+	 * 	- 'from'	-	departure campus
+	 *  - 'to'		-	arrival campus
+	 * 	- 'date'	- 	departure date
 	 */
-	function searchFlights() {
+	function searchFlights () {
 		// load the main model
 		$this->load->model("airuoft_model");
 		
+		// TODO check that everything is set
+		
+		// format date correctly for DB
 		$departureDate = DateTime::createFromFormat("m/d/Y", $_REQUEST['date']);
 		
-		$this->airuoft_model->get_available_flights($_REQUEST['from'], $_REQUEST['to'], date_format($departureDate, "Y-m-d"));
+		// query DB for flight times
+		$data["times"] = $this->airuoft_model->get_available_flights($_REQUEST['from'], $_REQUEST['to'], date_format($departureDate, "Y-m-d"));
+		
+		// set user variables (at this point they have been verrified)
+		$_SESSION['from'] = $_REQUEST['from'];
+		$_SESSION['to'] = $_REQUEST['to'];
+		$_SESSION['date'] = $_REQUEST['date'];
+		
+		// redirect to flight info, where user can pick a flight
+		$this->load->view("flightinfo", $data);
+	}
+	
+	/**
+	 * This function is called by flightinfo.php to search for seats
+	 * Load the seats into an array
+	 * 
+	 * Sets the following session variables:
+	 * 	- 'time'	- departure time  (HH:MM:SS) where MM and SS should be zeros
+	 */
+	function searchSeats () {
+		// TODO check that everything is set
+		
+		$this->logger->log($_REQUEST['time'], "departure time");
+		$_SESSION['time'] = $_REQUEST['time'];
 	}
 	
 	/**

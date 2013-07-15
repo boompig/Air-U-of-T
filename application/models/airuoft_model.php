@@ -80,10 +80,10 @@ class AirUofT_Model extends CI_Model {
 	}
 	
 	/**
-	 * Return an array of Flight objects that fit the search criteria. Only available flights will be returned.
-	 * @param $from Departure campus
-	 * @param $to Destination campus
-	 * @param $date Departure date
+	 * Return an array of times that fit the search criteria.
+	 * @param $from Departure campus (one of UTM, UTSG)
+	 * @param $to Destination campus (one of UTM, UTSG)
+	 * @param $date Departure date (in the format yyyy-mm-dd)
 	 */
 	function get_available_flights ($from, $to, $date) {
 		// time to get the campus IDs
@@ -91,25 +91,22 @@ class AirUofT_Model extends CI_Model {
 		$campusFrom = $this->campuses[$from];
 		$campusTo = $this->campuses[$to];
 		
-		$q = "SELECT timetable.leavingfrom AS departureCampus,
-		timetable.goingto AS arrivalCampus,
-		timetable.time AS departureTime,
-		flight.date AS departureDate,
-		flight.available AS available 
+		$q = "SELECT timetable.time AS departureTime, flight.id AS flightID
 		FROM timetable INNER JOIN flight ON timetable.id=flight.timetable_id
 		WHERE timetable.leavingfrom=$campusFrom AND timetable.goingto=$campusTo AND flight.date='$date' AND flight.available=1;";
 		
 		$query = $this->db->query($q);
-		$i = 0;
+		$times = array();
 		
-		foreach ($query->result() as $row) {
-			$i++;
-			$this->logger->log($row, "query result");	
+		if ($query->num_rows() == 0) {
+			$this->logger->log($q, "No result set on fetching flights with this query: ");
+		} else {
+			foreach ($query->result() as $row) {
+				$times[] = $row->departureTime;
+			}
 		}
 		
-		if ($i == 0) {
-			$this->logger->log($q, "No result set");
-		}
+		return $times;
 	}
 	
 	/**
