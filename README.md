@@ -43,6 +43,11 @@ Breakdown:
 ##### Flight Info
 
 URL: `flightinfo.php`
+MODEL: `customer.php`
+
+Model:
+
+* retrieve all flights which are available for the given campus and date
 
 Collect the following info:
 
@@ -57,6 +62,11 @@ Present user with list of available flights matching search parameters that have
 ##### Seat Info
 
 URL: `seats.php`
+MODEL: `customer.php`
+
+Model:
+
+* retrieve the occupied seats for the selected flight
 
 Let user select seats by clicking on helicopter schema (see [CSC309 Website] [1])
 
@@ -93,11 +103,22 @@ Enforce the following validation rules:
 
 When a user confirms, redirect to [Summary](#summary-info)
 
+##### Confirmation
+
+URL: `confirmation.php`
+MODEL: `customer.php`
+
+Model:
+* submit all ticket info to it, and it writes the info into the Ticket table
+
+Regurgitate all info, ask user to confirm
+
 ##### Summary Info
 
 URL: `ticketsummary.php`
 
-Display customer's flight information
+Display customer's flight information:
+
 * this means the page is auto-generated
 
 Functionality:
@@ -116,6 +137,13 @@ This is the final section of the customer chain. Allow redirect back to main pag
 #### Administrating Flights (admin portal)
 
 URL: `admin.php`
+MODEL: `admin.php`
+
+Model:
+
+* Delete all flight and ticket data
+* Populate the Flight for the next 14 days
+* Return all tickets sold
 
 Requires the following options:
 
@@ -126,6 +154,7 @@ Requires the following options:
 ##### Sold Ticket Info
 
 URL: `soldtickets.php`
+MODEL: `admin.php`
 
 This page is auto-generated from DB
 
@@ -187,6 +216,10 @@ Fields:
 About:
 This table is used to keep track of *all* available flights. Initially, should be pre-filled with all flights for 2 days. I think.
 **The only thing that should change in this table is the *available* field**
+
+NOTE:
+
+* update AVAILABLE on ticket purchase
 
 #### Ticket
 
