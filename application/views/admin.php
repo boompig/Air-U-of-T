@@ -1,3 +1,9 @@
+<?php
+header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+header('Pragma: no-cache'); // HTTP 1.0.
+header('Expires: 0'); // Proxies.
+?>
+
 <!DOCTYPE html>
 
 <html>
@@ -11,20 +17,17 @@
 		<h1>Admin Portal</h1>
 		
 		<div>
-			<p>
-				Delete all flight and ticket data
-			</p>
 			<button type="button">
-				Do It
+				Delete all flight and ticket data
 			</button>
 		</div>
 		
 		<div>
-			<p>Populate flight table for next 14 days</p>
-			
-			<button type="button">
-				Fill
-			</button>
+			<?php
+				echo form_open("airuoft/createFlights");
+				echo form_submit("create", "Populate flight table for next 14 days");
+				echo form_close();
+			?>
 		</div>
 		
 		<a href="soldtickets.php">See all tickets sold</a>

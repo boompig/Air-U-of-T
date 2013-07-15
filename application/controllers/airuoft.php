@@ -27,8 +27,38 @@ class AirUofT extends CI_Controller {
 		$this->load->view("landing");
 	}
 	
+	/**
+	 * The main landing page for the admin portal.
+	 */
+	function admin() {
+		$this->load->view("admin");
+	}
+	
+	/**
+	 * This function is called by landing.php to search for flights.
+	 * Load the flights into an array 
+	 * It is expected that the $_REQUEST parameter have the date set in this format: 'dd/mm/yyyy'
+	 */
 	function searchFlights() {
-		$this->logger->log("searching for flights from '" . $_REQUEST['from'] . "'");
+		// load the main model
+		$this->load->model("airuoft_model");
+		
+		$departureDate = DateTime::createFromFormat("m/d/Y", $_REQUEST['date']);
+		
+		$this->airuoft_model->get_available_flights($_REQUEST['from'], $_REQUEST['to'], date_format($departureDate, "Y-m-d"));
+	}
+	
+	/**
+	 * Create flights for the next 14 days.
+	 */
+	function createFlights () {
+		// load the main model
+		$this->load->model("airuoft_model");
+		// fill the table
+		$this->airuoft_model->fill_flights();
+		// redirect back to admin page
+		// TODO show some sort of confirmation
+		$this->load->view("admin");
 	}
 }
 
