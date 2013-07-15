@@ -20,6 +20,9 @@ class AirUofT extends CI_Controller {
 		$this->logger = FirePHP::getInstance(true);
 	}
 	
+	/**
+	 * The main landing page for the customer portal.
+	 */
 	function index() {
 		$this->load->view("landing");
 	}
