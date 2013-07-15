@@ -17,6 +17,12 @@ $u = HTML_Utils::get_instance();
 		<!-- Google-hosted JQuery -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		
+		<!-- Google-hosted JQuery UI -->
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		
+		<!-- JQuery UI theme -->
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		
 		<script>
 			/**
 			 * Created a String.format function, because I was sick of constantly concatenating strings.
@@ -53,12 +59,18 @@ $u = HTML_Utils::get_instance();
 		
 			$(function() {
 				$(".campusChooser").change(function() {
-					console.log("here");
 					changeOtherCampus($(this).attr("id"), $(this).val());
 				});
 				
 				// couldn't figure out how to do this in CI, so just using JS instead
 				$(".campusChooser").find("option[value='']").attr("disabled", "disabled");
+				
+				$("#date").datepicker({
+					numberOfMonths: 2,
+					showButtonPanel: true,
+					minDate: "+1D",
+					maxDate: "+14D"
+				});
 			});
 		</script>
 	</head>

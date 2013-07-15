@@ -85,7 +85,9 @@ $u = HTML_Utils::get_instance();
 				
 				$("#date").datepicker({
 					numberOfMonths: 2,
-					showButtonPanel: true
+					showButtonPanel: true,
+					minDate: "+1D",
+					maxDate: "+14D"
 				});
 			});
 		</script>
