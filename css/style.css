@@ -1,0 +1,16 @@
+/**
+ * 	Generic stylesheet
+ */
+
+#logo {
+	width: 100px;
+}
+
+input, select {
+	display: block;
+}
+
+body {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 1em;
+}

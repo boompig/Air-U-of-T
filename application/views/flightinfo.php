@@ -22,47 +22,16 @@ $this->load->model("html_utils");
 		<!-- JQuery UI theme -->
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 		
+		<!-- custom style -->
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/style.css" />
+		
+		<!-- custom scripts -->
+		<script src="<?=base_url(); ?>/js/utils.js"></script>
+		<script src="<?=base_url(); ?>/js/flight.js"></script>
+		
 		<script>
-			/**
-			 * Created a String.format function, because I was sick of constantly concatenating strings.
-			 * Works similarly to Python's string format function.
-			 */
-			String.prototype.format = function () {
-				var s = this;
-				
-				for (var i = 0; i < arguments.length; i++) {
-					s = s.replace("{" + i + "}", arguments[i]);
-				}
-				
-				return s;
-			};
-		
-			/**
-			 * Given that a given field has changed value, alter the other campus field to the opposite value.
-			 */
-			function changeOtherCampus(field, value) {
-				"use strict";
-				
-				var otherField = field == "to" ? "from" : "to", otherValue;
-				
-				if (value == "UTSG") {
-					otherValue = "UTM";
-				} else if (value == "UTM") {
-					otherValue = "UTSG";
-				} else {
-					otherValue = "";
-				}
-				
-				$("#" + otherField).find("option[value='{0}']".format(otherValue)).prop("selected", true);
-			}
-		
 			$(function() {
-				$(".campusChooser").change(function() {
-					changeOtherCampus($(this).attr("id"), $(this).val());
-				});
-				
-				// couldn't figure out how to do this in CI, so just using JS instead
-				$(".campusChooser").find("option[value='']").attr("disabled", "disabled");
+				setupCampusChooser(".campusChooser");
 				
 				$("#date").datepicker({
 					minDate: "+1D",
