@@ -105,6 +105,10 @@ $logger = FirePHP::getInstance(true);
 						$arr['pattern'] = "\d{4}\-\d{2}\-\d{2}";
 						echo form_input($arr);
 					?>
+					<!-- empty link to get icon -->
+					<a href="#">
+						<span class="ui-state-default ui-corner-all ui-icon ui-icon-calendar"></span>
+					</a>
 				</div>	
 				<?php
 					echo form_submit("search", "Search Flights");

@@ -101,6 +101,7 @@ foreach (array("from", "to", "date", "time") as $k) {
 					
 					$arr = HTML_Utils::get_input_array("date");
 					$arr['value'] = $_SESSION['date'];
+					$arr['size'] = 10;
 					
 					// stuff for client-side validation
 					$arr['required'] = "required";

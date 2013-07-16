@@ -58,6 +58,8 @@ tr:hover {
 
 input[type=text] {
 	padding-left: 3px;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 .error {
@@ -65,3 +67,11 @@ input[type=text] {
 	margin-bottom: 5px;
 	margin-left: 6px;
 }
+
+.ui-icon-calendar {
+	display: inline-block;
+	position: relative;
+	left: -30px;
+	top: 4px;
+}
+
