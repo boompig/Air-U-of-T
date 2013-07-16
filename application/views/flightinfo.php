@@ -48,7 +48,8 @@ $logger = FirePHP::getInstance(true);
 				
 				$("#date").datepicker({
 					minDate: "+1D",
-					maxDate: "+14D"
+					maxDate: "+14D",
+					dateFormat: "yy-mm-dd" // this line actually means yyyy-mm-dd
 				});
 				
 				$("input[type=submit], button").button();
