@@ -57,11 +57,11 @@ $logger = FirePHP::getInstance(true);
 				$(".selectButton").click(function() {
 					// get departure time for the button's row
 					var time = $(this).parent().parent().find("td:first").html();
-					console.log(time);
+					var flightID = $(this).parent().parent().find("td .flightID").html();
 					
 					$("#time").val(time);
+					$("#flightID").val(flightID);
 					$("#seatForm").submit();
-					
 				});
 				
 				$("form").submit(function() {
@@ -110,7 +110,7 @@ $logger = FirePHP::getInstance(true);
 					<a href="#">
 						<span class="ui-state-default ui-corner-all ui-icon ui-icon-calendar"></span>
 					</a>
-				</div>	
+				</div>
 				<?php
 					echo form_submit("search", "Search Flights");
 					echo form_close();
@@ -118,12 +118,12 @@ $logger = FirePHP::getInstance(true);
 				
 			</div>
 			<?php
-				$this->table->set_heading(array("Depart", "Arrive", ""));
+				$this->table->set_heading(array("Depart", "Arrive", "", ""));
 				// $logger->log($times);
 				$i = 0;
-				foreach($times as $time) {
+				foreach($times as $time => $flightID) {
 					$i++;
-					$this->table->add_row(array($time, preg_replace("/00/", "30", $time, 1), "<button type='button' class='selectButton'>Select</button>"));
+					$this->table->add_row(array($time, preg_replace("/00/", "30", $time, 1), "<span class='flightID'>$flightID</span>","<button type='button' class='selectButton'>Select</button>"));
 				}
 				
 				echo $this->table->generate();
@@ -131,6 +131,7 @@ $logger = FirePHP::getInstance(true);
 			
 			<?=form_open("airuoft/searchSeats", array("id" => 'seatForm')); ?>
 				<input type="hidden" name="time" id="time" value="" required="required" pattern="\d{2}\:00\:00" />
+				<input type="hidden" name="flightID" id="flightID" value="" required="required" pattern="\d+" />
 			<?=form_close(); ?>
 		</div> <!-- end search panel -->
 	</body>

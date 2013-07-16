@@ -80,7 +80,7 @@ class AirUofT_Model extends CI_Model {
 	}
 	
 	/**
-	 * Return an array of times that fit the search criteria.
+	 * Return an associative array of times mapping to flight IDs that fit the search criteria.
 	 * @param $from Departure campus (one of UTM, UTSG)
 	 * @param $to Destination campus (one of UTM, UTSG)
 	 * @param $date Departure date (in the format yyyy-mm-dd)
@@ -102,7 +102,7 @@ class AirUofT_Model extends CI_Model {
 			$this->logger->log($q, "No result set on fetching flights with this query: ");
 		} else {
 			foreach ($query->result() as $row) {
-				$times[] = $row->departureTime;
+				$times[$row->departureTime] = $row->flightID;
 			}
 		}
 		
@@ -134,6 +134,70 @@ class AirUofT_Model extends CI_Model {
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * Return a list of seat numbers that are available for this flight.
+	 * Default is array(0, 1, 2)
+	 */
+	function get_available_seats ($flightID) {
+		$q = "SELECT seat FROM ticket WHERE flight_id=$flightID;";
+		$query = $this->db->query($q);
+		$goodSeats = range(0, 2);
+		
+		foreach($query->result() as $row) {
+			if (array_key_exists($row->seat, $goodSeats)) {
+				unset($goodSeats[$row->seat]);
+			}
+		}
+		
+		return $goodSeats;
+	}
+	
+	/**
+	 * Create a brand-new ticket from the passed data.
+	 * Return true iff successfully inserted item.
+	 */
+	function create_ticket ($fName, $lName, $ccNum, $ccExpDate, $flightID, $seatNum) {
+		$data = array(
+			"first" => $fName,
+			"last" => $lName,
+			"creditcardnumber" => $ccNum,
+			"creditcardexpiration" => $ccExpDate,
+			"flight_id" => $flightID,
+			"seat" => $seatNum
+		);
+			
+		return $this->$db->insert($data);
+	}
+	
+	/**
+	 * Return an array of tickets. Each ticket is a Ticket object (see the documentation in model/ticket.php)
+	 */
+	function get_tickets () {
+		$this->load->model("ticket");
+		
+		$q = "SELECT ticket.first AS fName, 
+		ticket.last AS lName,
+		ticket.creditcardnumber AS ccNum,
+		ticket.creditcardexpiration AS ccExpDate,
+		ticket.seat AS seatNum,
+		flight.date AS flightDate
+		FROM ticket INNER JOIN flight ON ticket.flight_id=flight.id;";
+		
+		$query = $this->db->query($q);
+		$tickets = array();
+		
+		if ($query->num_rows() == 0) {
+			$this->logger->log($q, "No result set on fetching tickets with this query: ");
+		} else {
+			foreach ($query->result() as $row) {
+				$f = new Ticket($row->flightDate, $row->seatNum, $row->fName, $row->lName, $row->ccNum, $row->ccExpDate);
+				$tickets[] = $f;
+			}
+		}
+		
+		return $tickets;
 	}
 
 	/**
