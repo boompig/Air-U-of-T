@@ -1,0 +1,67 @@
+/**
+ * 	Styling for flight info page
+ */
+
+/**
+ * 	Good for debugging
+ */
+div {
+	/*border: 1px solid #dddddd;*/
+}
+
+#searchPanel {
+	margin-left: 100px;
+	margin-top: 100px;
+	width: 1000px;
+}
+
+#toolbar {
+	margin-bottom: 50px;
+	border: 1px solid #dddddd;
+	padding: 20px 0 10px 10px;
+}
+
+#toolbar label {
+	padding-right: 10px;
+}
+
+#toolbar input[type=submit] {
+	margin-left: 20px;
+	position: relative;
+	bottom: 8px;
+}
+
+.inputPanel {
+	float: left;
+	padding-right: 40px;
+}
+
+#date, .ui-icon-calendar {
+	display: inline-block;
+}
+
+.ui-icon-calendar {
+	position: relative;
+	left: -30px;
+	top: 4px;
+}
+
+table {
+	clear: both;
+	width: 1000px;
+	text-align: center;
+}
+
+tr:hover {
+	background-color: #DFEFFC;
+}
+
+input[type=text] {
+	padding-left: 3px;
+}
+
+.error {
+	font-size: .8em;
+	margin-bottom: 5px;
+	margin-left: 6px;
+}

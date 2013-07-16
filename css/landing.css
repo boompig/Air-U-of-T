@@ -1,0 +1,64 @@
+/**
+ * 	Styling for landing page
+ */
+
+/**
+ * 	Good for debugging
+ */
+div {
+	/*border: 1px solid #000;*/
+}
+
+#searchPanel {
+	margin-left: 100px;
+	margin-top: 100px;
+}
+
+.inputPanel {
+	float: left;
+	width: 400px;
+}
+
+#date, .ui-icon-calendar {
+	display: inline-block;
+}
+
+.ui-icon-calendar {
+	position: relative;
+	left: -30px;
+	top: 4px;
+}
+
+input[type=text] {
+	padding-left: 3px;
+}
+
+#datePanel, #timePanel {
+	margin-top: 50px;
+}
+
+#datePanel {
+	clear: both;
+}
+
+input[type=submit] {
+	clear: both;
+	display: block;
+	position: relative;
+	left: 200px;
+	top: 80px;
+}
+
+label {
+	display: block;
+	
+	position: relative;
+	bottom: 6px;
+	left: 6px;
+}
+
+.error {
+	font-size: .8em;
+	margin-bottom: 5px;
+	margin-left: 6px;
+}

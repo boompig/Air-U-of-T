@@ -2,15 +2,28 @@
  * 	Generic stylesheet
  */
 
-#logo {
-	width: 100px;
-}
-
-input, select {
-	display: block;
-}
-
 body {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 1em;
+}
+
+select, option, input[type=text] {
+	font-size: 1em;
+}
+
+.error {
+	color: red;
+}
+
+/**
+ * 	JQuery UI styling
+ */
+
+.ui-selecting { 
+	background: #FECA40; 
+}
+
+.ui-selected { 
+	background: #F39814; 
+	color: white; 
 }

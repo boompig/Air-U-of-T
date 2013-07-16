@@ -37,7 +37,7 @@ class AirUofT extends CI_Controller {
 	/**
 	 * This function is called by landing.php (or alternatively flightinfo.php) to search for flights.
 	 * Load the flights into an array 
-	 * It is expected that the $_REQUEST has the following set: parameter have the date set in this format: 'dd/mm/yyyy'
+	 * It is expected that the $_REQUEST has the following set: parameter have the date set in this format: 'mm/dd/yyyy'
 	 * 
 	 * Sets the following session variables:
 	 * 	- 'from'	-	departure campus
@@ -45,24 +45,36 @@ class AirUofT extends CI_Controller {
 	 * 	- 'date'	- 	departure date
 	 */
 	function searchFlights () {
-		// load the main model
-		$this->load->model("airuoft_model");
+		$this->load->library("form_validation");
 		
-		// TODO check that everything is set
+		$this->form_validation->set_rules("from", "Departure Campus", "required");
+		$this->form_validation->set_rules("to", "Destination Campus", "required");
+		$this->form_validation->set_rules("date", "Departure Date", "required");
 		
-		// format date correctly for DB
-		$departureDate = DateTime::createFromFormat("m/d/Y", $_REQUEST['date']);
+		$this->form_validation->set_error_delimiters("<div class='error'>", "</div>");
 		
-		// query DB for flight times
-		$data["times"] = $this->airuoft_model->get_available_flights($_REQUEST['from'], $_REQUEST['to'], date_format($departureDate, "Y-m-d"));
+		// remember everything user entered in $_SESSION variable
+		foreach (array("from", "to", "date", "time") as $k) {
+			if (array_key_exists($k, $_REQUEST)) {
+				$_SESSION[$k] = $_REQUEST[$k];
+			}
+		}
 		
-		// set user variables (at this point they have been verrified)
-		$_SESSION['from'] = $_REQUEST['from'];
-		$_SESSION['to'] = $_REQUEST['to'];
-		$_SESSION['date'] = $_REQUEST['date'];
-		
-		// redirect to flight info, where user can pick a flight
-		$this->load->view("flightinfo", $data);
+		if ($this->form_validation->run()) {
+			// load the main model
+			$this->load->model("airuoft_model");
+			
+			// format date correctly for DB
+			$departureDate = DateTime::createFromFormat("m/d/Y", $_REQUEST['date']);
+			
+			// query DB for flight times
+			$data["times"] = $this->airuoft_model->get_available_flights($_REQUEST['from'], $_REQUEST['to'], date_format($departureDate, "Y-m-d"));
+			
+			// redirect to flight info, where user can pick a flight
+			$this->load->view("flightinfo", $data);
+		} else {
+			$this->load->view("landing");
+		}
 	}
 	
 	/**

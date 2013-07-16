@@ -5,6 +5,18 @@ header('Expires: 0'); // Proxies.
 
 $this->load->model("html_utils");
 
+$campus_options = array(
+	"" => " -- Choose a Campus --",
+	"UTSG" => "St. George",
+	"UTM" => "Mississauga"
+);
+
+// set $_SESSION variables, so don't error out at the bottom
+foreach (array("from", "to", "date", "time") as $k) {
+	if (! array_key_exists($k, $_SESSION))
+		$_SESSION[$k] = "";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -21,10 +33,11 @@ $this->load->model("html_utils");
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		
 		<!-- JQuery UI theme -->
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" />
 		
 		<!-- custom style -->
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/style.css" />
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/landing.css" />
 		
 		<!-- custom scripts -->
 		<script src="<?=base_url(); ?>/js/utils.js"></script>
@@ -32,12 +45,21 @@ $this->load->model("html_utils");
 		
 		<script>
 			$(function() {
-				setupCampusChooser(".campusChooser");
+				f = new Flight();
+				f.setupCampusChooser(".campusChooser");
 				
 				$("#date").datepicker({
 					minDate: "+1D",
 					maxDate: "+14D"
 				});
+				
+				// $("input[type=text], select").after($("<div class='errors'></div>"));
+				
+				$("form").submit(function() {
+					return f.validate_inputs();
+				});
+				
+				$("input[type=submit], button").button();
 			});
 		</script>
 	</head>
@@ -51,24 +73,52 @@ $this->load->model("html_utils");
 		
 		<div id="searchPanel">
 			<?php
+				// echo validation_errors();
 				echo form_open('airuoft/searchFlights');
-				
-				$campus_options = array(
-					"" => " -- Choose a Campus --",
-					"UTSG" => "St. George",
-					"UTM" => "Mississauga"
-				);
-				
-				echo form_label('From');
-				echo form_dropdown("from", $campus_options, "", HTML_Utils::get_dropdown_options(array("id"=>"from", "class"=>"campusChooser")));
-				
-				echo form_label('To');
-				echo form_dropdown("to", $campus_options, "", HTML_Utils::get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
-				
-				echo form_label('Date');
-				echo form_input(HTML_Utils::get_input_array("date"));
-				
+			?>
+			<div id="fromPanel" class="inputPanel">
+				<?php
+					echo form_label("From");
+					echo form_error("from");
+					echo form_dropdown("from", $campus_options, $_SESSION["from"], HTML_Utils::get_dropdown_options(array("id"=>"from", "class"=>"campusChooser")));
+				?>
+			</div> <!-- end from panel -->
+			<div id="toPanel" class="inputPanel">
+				<?php
+					echo form_label("To");
+					echo form_error("to");
+					echo form_dropdown("to", $campus_options, $_SESSION["to"], HTML_Utils::get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
+				?>
+			</div> <!-- end toPanel -->
+			<div id="datePanel" class="inputPanel">
+				<?php
+					echo form_label("Date");
+					echo form_error("date");
+					
+					$arr = HTML_Utils::get_input_array("date");
+					$arr['value'] = $_SESSION['date'];
+					echo form_input($arr);
+				?>
+				<!-- empty link to get icon -->
+				<a href="#">
+					<span class="ui-state-default ui-corner-all ui-icon ui-icon-calendar"></span>
+				</a>
+			</div>
+			<div id="timePanel" class="inputPanel">
+				<?php
+				// this is an experimental feature, feel free to ignore it
+					if (isset($times)) {
+						echo form_label("Time");
+						echo form_error("time");
+						echo form_input(HTML_Utils::get_input_array("time"));
+					}
+				?>
+			</div>
+			<?php
 				echo form_submit('search', 'Search Flights');
+			?>
+			<!-- </div> -->
+			<?php
 				echo form_close();
 			?>
 		</div>
