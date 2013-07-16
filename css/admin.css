@@ -1,0 +1,28 @@
+/**
+ * 	CSS styling for admin pages
+ */
+
+button, input[type=submit], a {
+	display: block;
+}
+
+button, input[type=submit] {
+	margin: 10px;
+}
+
+.deleteButton {
+	color: #CC0000 !important;
+}
+
+.ui-icon {
+	float: left;
+	margin-right: 10px;
+}
+
+.ui-icon-info {
+	margin-left: 10px;
+}
+
+#confirmation {
+	width: 300px;
+}

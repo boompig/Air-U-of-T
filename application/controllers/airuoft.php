@@ -98,15 +98,48 @@ class AirUofT extends CI_Controller {
 	
 	/**
 	 * Create flights for the next 14 days.
+	 * Pass an associative array to the view called 'result', with the following parameters:
+	 * 		'status'	-	boolean indicating whether action succeeded or not
+	 * 		'msg'		-	String, a message
 	 */
 	function createFlights () {
-		// load the main model
 		$this->load->model("airuoft_model");
-		// fill the table
-		$this->airuoft_model->fill_flights();
-		// redirect back to admin page
-		// TODO show some sort of confirmation
-		$this->load->view("admin");
+		
+		$status = $this->airuoft_model->fill_flights();
+		
+		$data["result"] = array("status" => $status);
+		
+		if ($status) {
+			$data["result"]["msg"] = "Flights added successfully";
+		} else {
+			$data["result"]["msg"] = "Failed to fill flight table";
+		}
+		
+		$this->logger->log($data);
+		
+		$this->load->view("admin", $data);
+	}
+	
+	/**
+	 * Delete all flight and ticket information.
+	 * Pass an associative array to the view called 'result', with the following parameters:
+	 * 		'status'	-	boolean indicating whether action succeeded or not
+	 * 		'msg'		-	String, a message
+	 */
+	function deleteAll () {
+		$this->load->model("airuoft_model");
+		
+		$status = $this->airuoft_model->delete_flights_and_tickets();
+		
+		$data["result"] = array("status" => $status);
+		
+		if ($status) {
+			$data["result"]["msg"] = "Data deleted successfully";
+		} else {
+			$data["result"]["msg"] = "Failed to delete data";
+		}
+		
+		$this->load->view("admin", $data);
 	}
 }
 

@@ -111,6 +111,7 @@ class AirUofT_Model extends CI_Model {
 	
 	/**
 	 * Fill the flight table for the next 14 days with the relevant information.
+	 * Return true iff successful.
 	 */
 	function fill_flights() {
 		$this->db->trans_start();
@@ -126,10 +127,35 @@ class AirUofT_Model extends CI_Model {
 		}
 		
 		$this->db->trans_complete();
+		$result = $this->db->trans_status();
 		
-		if ($this->db->trans_status() === FALSE) {
+		if (! $result) {
 			$this->logger->log("Populating flight table failed" ,"");
 		}
+		
+		return $result;
+	}
+
+	/**
+	 * Delete everything in flights and tickets tables.
+	 * Return True iff successful.
+	 */	
+	function delete_flights_and_tickets() {
+		$this->db->trans_start();
+		
+		foreach (array("flight", "ticket") as $table) {
+			$q = "DELETE FROM $table WHERE 1=1";
+			$this->db->query($q);
+		}
+		
+		$this->db->trans_complete();
+		$result = $this->db->trans_status();
+		
+		if (! $result) {
+			$this->logger->log("Deleting flight and ticket data failed" ,"");
+		}
+		
+		return $result;
 	}
 }
 ?>

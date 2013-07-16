@@ -20,16 +20,41 @@ header('Expires: 0'); // Proxies.
 		<!-- JQuery UI theme -->
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" />
 		
-		<style>
-			button, input[type=submit] {
-				margin: 10px;
-			}
-		</style>
+		<!-- custom style -->
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/style.css" />
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/admin.css" />
 		
 		<script>
 			$(function() {
 				// add pretty JQuery UI stuff
 				$("button, input[type=submit]").button();
+				
+				// create initial dialog
+				$("#dialog-confirm-delete").dialog({
+					autoOpen: false,
+					resizable: false,
+					width: 400,
+					modal: true
+				});
+				
+				$(".deleteButton").click(function(e) {
+					// need this so form doesn't submit right away
+					e.preventDefault();
+					
+					// unfortunately have to put this part here, or else doesn't work
+					$("#dialog-confirm-delete").dialog({
+						buttons: {
+							"Delete Everything": function() {
+								$("#deleteForm").submit();
+							},
+							"Cancel": function() {
+								$(this).dialog("close");
+							}
+						}
+					});
+					
+					$("#dialog-confirm-delete").dialog("open");
+				});
 			});
 		</script>
 	</head>
@@ -37,20 +62,35 @@ header('Expires: 0'); // Proxies.
 	<body>
 		<h1>Admin Portal</h1>
 		
-		<div>
-			<button type="button">
-				Delete all flight and ticket data
-			</button>
-		</div>
-		
-		<div>
-			<?php
-				echo form_open("airuoft/createFlights");
-				echo form_submit("create", "Populate flight table for next 14 days");
-				echo form_close();
-			?>
-		</div>
+		<?php
+			echo form_open("airuoft/createFlights");
+			echo form_submit("create", "Populate flight table for next 14 days");
+			echo form_close();
+		?>
 		
 		<a href="soldtickets.php"><button type="button">View sold tickets</button></a>
+		
+		<?php
+			echo form_open("airuoft/deleteAll", array("id" => "deleteForm"));
+			echo form_submit("delete", "Delete all flight and ticket data", "class='deleteButton'");
+			echo form_close();
+		?>
+		
+		<div id="dialog-confirm-delete" title="Delete All Data?">
+			<p><span class="ui-icon ui-icon-alert"><!-- icon --></span>
+				Are you sure you want to delete all flight and ticket data?
+			</p>
+		</div>
+		
+		<div id="confirmation" class="ui-state-highlight ui-corner-all" style="display: <?php if (isset($result)) echo "block"; else echo "none";?>;">
+			<p>
+				<span class="ui-icon ui-icon-info"></span>
+				<?php
+					if (isset($result)) {
+						echo $result["msg"];
+					}
+				?>
+			</p>
+		</div>
 	</body>
 </html>
