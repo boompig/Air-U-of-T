@@ -28,13 +28,6 @@ class AirUofT extends CI_Controller {
 	}
 	
 	/**
-	 * The main landing page for the admin portal.
-	 */
-	function admin() {
-		$this->load->view("admin");
-	}
-	
-	/**
 	 * This function is called by landing.php (or alternatively flightinfo.php) to search for flights.
 	 * Load the flights into an array 
 	 *  
@@ -52,6 +45,7 @@ class AirUofT extends CI_Controller {
 		$this->form_validation->set_rules("to", "Destination Campus", "required");
 		$this->form_validation->set_rules("date", "Departure Date", "required");
 		// TODO validate date server-side
+		// TODO also make sure date is not in the past, and date is not beyond max scope
 		
 		$this->form_validation->set_error_delimiters("<div class='error'>", "</div>");
 		
@@ -72,6 +66,10 @@ class AirUofT extends CI_Controller {
 			// query DB for flight times
 			$data["times"] = $this->airuoft_model->get_available_flights($_REQUEST['from'], $_REQUEST['to'], date_format($departureDate, "Y-m-d"));
 			
+			// THIS IS VERY IMPORTANT:
+			// remember valid flightID's in the $_SESSION variable, so only valid times can be booked (i.e. those returned to the user)
+			$_SESSION["validFlights"] = array_values($data["times"]);
+			
 			// redirect to flight info, where user can pick a flight
 			$this->load->view("flightinfo", $data);
 		} else {
@@ -84,62 +82,26 @@ class AirUofT extends CI_Controller {
 	 * Load the seats into an array
 	 * 
 	 * Sets the following session variables:
-	 * 	- 'time'	- departure time  (HH:MM:SS) where MM and SS should be zeros
+	 * 	- 'time'		- departure time  (HH:MM:SS) where MM and SS should be zeros
+	 * 	- 'flightID'	- flight ID
 	 */
 	function searchSeats () {
-		// TODO check that everything is set
+		if (! in_array($_REQUEST["flightID"], $_SESSION["validFlights"])) {
+			//TODO trigger an error here	
+		}
 		
+		// by this point, input verified
 		$_SESSION['time'] = $_REQUEST['time'];
+		$_SESSION['flightID'] = $_REQUEST['flightID'];
 		
-		foreach (array("from", "to", "date", "time") as $k) {
+		
+		
+		$this->load->model("airuoft_model");
+		$_SESSION["seatNum"] = $this->airuoft_model->get_available_seats($_SESSION["flightID"]);
+		
+		foreach (array("from", "to", "date", "time", "flightID", "seatNum") as $k) {
 			$this->logger->log($_SESSION[$k], $k);
 		}
-	}
-	
-	/**
-	 * Create flights for the next 14 days.
-	 * Pass an associative array to the view called 'result', with the following parameters:
-	 * 		'status'	-	boolean indicating whether action succeeded or not
-	 * 		'msg'		-	String, a message
-	 */
-	function createFlights () {
-		$this->load->model("airuoft_model");
-		
-		$status = $this->airuoft_model->fill_flights();
-		
-		$data["result"] = array("status" => $status);
-		
-		if ($status) {
-			$data["result"]["msg"] = "Flights added successfully";
-		} else {
-			$data["result"]["msg"] = "Failed to fill flight table";
-		}
-		
-		$this->logger->log($data);
-		
-		$this->load->view("admin", $data);
-	}
-	
-	/**
-	 * Delete all flight and ticket information.
-	 * Pass an associative array to the view called 'result', with the following parameters:
-	 * 		'status'	-	boolean indicating whether action succeeded or not
-	 * 		'msg'		-	String, a message
-	 */
-	function deleteAll () {
-		$this->load->model("airuoft_model");
-		
-		$status = $this->airuoft_model->delete_flights_and_tickets();
-		
-		$data["result"] = array("status" => $status);
-		
-		if ($status) {
-			$data["result"]["msg"] = "Data deleted successfully";
-		} else {
-			$data["result"]["msg"] = "Failed to delete data";
-		}
-		
-		$this->load->view("admin", $data);
 	}
 }
 
