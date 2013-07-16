@@ -7,7 +7,7 @@ body {
 	font-size: 1em;
 }
 
-select, option, input[type=text] {
+select, option, input[type=text], input[type=date] {
 	font-size: 1em;
 }
 
