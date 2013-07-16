@@ -43,7 +43,8 @@ Flight.prototype.setupCampusChooser = function (selector) {
 };
 
 /**
- * Validate the input on submit. Return True iff all inputs are valids
+ * Validate the input on submit. Return True iff all inputs are valids.
+ * This is actually not strictly necessary since HTML5 validation is taking care of this.
  */
 Flight.prototype.validate_inputs = function () {
 	"use strict";

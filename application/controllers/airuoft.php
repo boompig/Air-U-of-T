@@ -37,12 +37,13 @@ class AirUofT extends CI_Controller {
 	/**
 	 * This function is called by landing.php (or alternatively flightinfo.php) to search for flights.
 	 * Load the flights into an array 
-	 * It is expected that the $_REQUEST has the following set: parameter have the date set in this format: 'mm/dd/yyyy'
+	 *  
+	 * The $_REQUEST parameter 'date' should be in the format 'yyyy-mm-dd'
 	 * 
 	 * Sets the following session variables:
 	 * 	- 'from'	-	departure campus
 	 *  - 'to'		-	arrival campus
-	 * 	- 'date'	- 	departure date
+	 * 	- 'date'	- 	departure date (in the format yyyy-mm-dd)
 	 */
 	function searchFlights () {
 		$this->load->library("form_validation");
@@ -50,6 +51,7 @@ class AirUofT extends CI_Controller {
 		$this->form_validation->set_rules("from", "Departure Campus", "required");
 		$this->form_validation->set_rules("to", "Destination Campus", "required");
 		$this->form_validation->set_rules("date", "Departure Date", "required");
+		// TODO validate date server-side
 		
 		$this->form_validation->set_error_delimiters("<div class='error'>", "</div>");
 		
@@ -65,7 +67,7 @@ class AirUofT extends CI_Controller {
 			$this->load->model("airuoft_model");
 			
 			// format date correctly for DB
-			$departureDate = DateTime::createFromFormat("m/d/Y", $_REQUEST['date']);
+			$departureDate = DateTime::createFromFormat("Y-m-d", $_REQUEST['date']);
 			
 			// query DB for flight times
 			$data["times"] = $this->airuoft_model->get_available_flights($_REQUEST['from'], $_REQUEST['to'], date_format($departureDate, "Y-m-d"));
@@ -87,8 +89,11 @@ class AirUofT extends CI_Controller {
 	function searchSeats () {
 		// TODO check that everything is set
 		
-		$this->logger->log($_REQUEST['time'], "departure time");
 		$_SESSION['time'] = $_REQUEST['time'];
+		
+		foreach (array("from", "to", "date", "time") as $k) {
+			$this->logger->log($_SESSION[$k], $k);
+		}
 	}
 	
 	/**

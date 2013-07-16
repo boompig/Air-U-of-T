@@ -99,6 +99,10 @@ $logger = FirePHP::getInstance(true);
 						$arr = HTML_Utils::get_input_array("date");
 						$arr["value"] = $_SESSION["date"];
 						$arr["size"] = 10;
+						
+						// stuff for client-side validation
+						$arr['required'] = "required";
+						$arr['pattern'] = "\d{4}\-\d{2}\-\d{2}";
 						echo form_input($arr);
 					?>
 				</div>	
@@ -121,7 +125,7 @@ $logger = FirePHP::getInstance(true);
 			?>
 			
 			<?=form_open("airuoft/searchSeats", array("id" => 'seatForm')); ?>
-				<input type="hidden" name="time" id="time" value="" />
+				<input type="hidden" name="time" id="time" value="" required="required" pattern="\d{2}\:00\:00" />
 			<?=form_close(); ?>
 		</div> <!-- end search panel -->
 	</body>

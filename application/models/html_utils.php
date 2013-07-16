@@ -15,9 +15,11 @@ class HTML_Utils extends CI_Model {
 	/**
 	 * Given an associative array, return an options string to add as 4th parameter to input_dropdown.
 	 * The options string simply glues together the key-value pairs of the associative array, and glues the array together with spaces.
+	 * Add an HTML5 'required' attribute as well.
 	 * @param $arr The associative array
 	 */
 	function get_dropdown_options($arr) {
+		$arr['required'] = 'required';
 		$a2 = array();
 		
 		foreach ($arr as $key => $value) {

@@ -21,19 +21,19 @@ function Utils () {
 
 /**
  * Return True iff given date is a valid date
- * The dateStr is in this format: mm/dd/yyyy
+ * The dateStr is in this format: yyyy-mm-dd
  * Inspired by this SOF question: http://stackoverflow.com/q/1353684/755934
  * @param {String} dateStr
  */
 Utils.isValidDate = function (dateStr) {
-	var datePattern = /(\d{2})\/(\d{2})\/(\d{4})/;
+	var datePattern = /(\d{4})\-(\d{2})\-(\d{2})/;
 	var match = dateStr.match(datePattern);
 	
 	if (match === null) {
 		return false;
 	}
 	
-	var d = new Date(match[3], match[1], match[2]);
+	var d = new Date(match[1], match[2], match[3]);
 	
 	if (Object.prototype.toString.call(d) !== "[object Date]") {
 		return false;

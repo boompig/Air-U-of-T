@@ -48,9 +48,13 @@ foreach (array("from", "to", "date", "time") as $k) {
 				f = new Flight();
 				f.setupCampusChooser(".campusChooser");
 				
+				// I can't seem to figure out how to set this up in CI, so will use JS
+				$("#date").attr("type", "date");
+				
 				$("#date").datepicker({
 					minDate: "+1D",
-					maxDate: "+14D"
+					maxDate: "+14D",
+					dateFormat: "yy-mm-dd" // this line actually means yyyy-mm-dd
 				});
 				
 				// $("input[type=text], select").after($("<div class='errors'></div>"));
@@ -97,22 +101,16 @@ foreach (array("from", "to", "date", "time") as $k) {
 					
 					$arr = HTML_Utils::get_input_array("date");
 					$arr['value'] = $_SESSION['date'];
+					
+					// stuff for client-side validation
+					$arr['required'] = "required";
+					$arr['pattern'] = "\d{4}\-\d{2}\-\d{2}";
 					echo form_input($arr);
 				?>
 				<!-- empty link to get icon -->
 				<a href="#">
 					<span class="ui-state-default ui-corner-all ui-icon ui-icon-calendar"></span>
 				</a>
-			</div>
-			<div id="timePanel" class="inputPanel">
-				<?php
-				// this is an experimental feature, feel free to ignore it
-					if (isset($times)) {
-						echo form_label("Time");
-						echo form_error("time");
-						echo form_input(HTML_Utils::get_input_array("time"));
-					}
-				?>
 			</div>
 			<?php
 				echo form_submit('search', 'Search Flights');
