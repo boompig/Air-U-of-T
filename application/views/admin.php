@@ -8,9 +8,30 @@ header('Expires: 0'); // Proxies.
 
 <html>
 	<head>
-		<title>Template Title</title>
+		<title>Admin Portal | Air U of T</title>
 		<meta charset="UTF-8" />
 		
+		<!-- Google-hosted JQuery -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		
+		<!-- Google-hosted JQuery UI -->
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		
+		<!-- JQuery UI theme -->
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" />
+		
+		<style>
+			button, input[type=submit] {
+				margin: 10px;
+			}
+		</style>
+		
+		<script>
+			$(function() {
+				// add pretty JQuery UI stuff
+				$("button, input[type=submit]").button();
+			});
+		</script>
 	</head>
 	
 	<body>
@@ -30,6 +51,6 @@ header('Expires: 0'); // Proxies.
 			?>
 		</div>
 		
-		<a href="soldtickets.php">See all tickets sold</a>
+		<a href="soldtickets.php"><button type="button">View sold tickets</button></a>
 	</body>
 </html>

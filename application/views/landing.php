@@ -23,7 +23,7 @@ foreach (array("from", "to", "date", "time") as $k) {
 
 <html>
 	<head>
-		<title>Landing Page</title>
+		<title>Flight Search | Air U of T</title>
 		<meta charset="UTF-8" />
 		
 		<!-- Google-hosted JQuery -->

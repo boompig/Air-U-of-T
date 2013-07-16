@@ -21,7 +21,7 @@ $logger = FirePHP::getInstance(true);
 
 <html>
 	<head>
-		<title>Flight Selection</title>
+		<title>Flight Selection | Air U of T</title>
 		<meta charset="UTF-8" />
 		
 		<!-- Google-hosted JQuery -->
