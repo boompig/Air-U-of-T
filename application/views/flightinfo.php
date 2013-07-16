@@ -124,7 +124,7 @@ $logger = FirePHP::getInstance(true);
 					$i = 0;
 					foreach($times as $time => $flightID) {
 						$i++;
-						$this->table->add_row(array($time, preg_replace("/00/", "30", $time, 1), "<span class='flightID'>$flightID</span>","<button type='button' class='selectButton'>Select</button>"));
+						$this->table->add_row(array($time, preg_replace("/00/", "30", $time, 1), "<button type='button' class='selectButton'>Select</button>", "<span class='flightID' style='display: none;'>$flightID</span>"));
 					}
 					
 					echo $this->table->generate();

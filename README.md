@@ -129,7 +129,7 @@ When a user confirms, redirect to [Summary](#summary-info)
 
 URL: `confirmation.php`
 
-MODEL: `customer.php`
+MODEL: `airuoft.php`
 
 Model:
 * submit all ticket info to it, and it writes the info into the Ticket table
@@ -160,7 +160,7 @@ This is the final section of the customer chain. Allow redirect back to main pag
 #### Administrating Flights (admin portal)
 
 URL: `admin.php`
-MODEL: `airuoft.php`
+MODEL: `admin.php`
 
 Model:
 
