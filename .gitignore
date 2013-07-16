@@ -1,8 +1,8 @@
-# ignore project file
+# do no keep pydev files under src control
+.pydev
+.pydevproject
 .project
 
-# ignore private TODO annotations
-TODO
-
-# ignore test folder with experimental stuff
+# do not keep experimental files under source control
 test
+

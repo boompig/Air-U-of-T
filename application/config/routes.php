@@ -40,7 +40,7 @@
 
 $route['default_controller'] = "airuoft";
 $route['404_override'] = '';
-$route['admin.php'] = 'airuoft/admin';
+$route['admin.php'] = 'admin/index';
 
 
 /* End of file routes.php */
