@@ -75,3 +75,9 @@ input[type=text] {
 	top: 4px;
 }
 
+.ui-icon-alert {
+	float: left;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+

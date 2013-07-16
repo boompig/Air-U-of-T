@@ -118,16 +118,23 @@ $logger = FirePHP::getInstance(true);
 				
 			</div>
 			<?php
-				$this->table->set_heading(array("Depart", "Arrive", "", ""));
-				// $logger->log($times);
-				$i = 0;
-				foreach($times as $time => $flightID) {
-					$i++;
-					$this->table->add_row(array($time, preg_replace("/00/", "30", $time, 1), "<span class='flightID'>$flightID</span>","<button type='button' class='selectButton'>Select</button>"));
+				if (count($times) > 0) {
+					$this->table->set_heading(array("Depart", "Arrive", "", ""));
+					// $logger->log($times);
+					$i = 0;
+					foreach($times as $time => $flightID) {
+						$i++;
+						$this->table->add_row(array($time, preg_replace("/00/", "30", $time, 1), "<span class='flightID'>$flightID</span>","<button type='button' class='selectButton'>Select</button>"));
+					}
+					
+					echo $this->table->generate();
 				}
-				
-				echo $this->table->generate();
 			?>
+			
+			<div class="ui-state-highlight ui-corner-all" style="display: <?php if (count($times) > 0) echo 'none'; else echo 'block'; ?>;">
+				<span class="ui-icon ui-icon-alert"><!-- icon --></span>
+				Whoops! There were no flights matching your search. Consider changing your departure date.
+			</div>
 			
 			<?=form_open("airuoft/searchSeats", array("id" => 'seatForm')); ?>
 				<input type="hidden" name="time" id="time" value="" required="required" pattern="\d{2}\:00\:00" />
