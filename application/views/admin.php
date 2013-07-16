@@ -63,15 +63,19 @@ header('Expires: 0'); // Proxies.
 		<h1>Admin Portal</h1>
 		
 		<?php
-			echo form_open("airuoft/createFlights");
+			echo form_open("admin/createFlights");
 			echo form_submit("create", "Populate flight table for next 14 days");
 			echo form_close();
 		?>
 		
-		<a href="soldtickets.php"><button type="button">View sold tickets</button></a>
+		<?php
+			echo form_open("admin/getTickets");
+			echo form_submit("tickets", "View sold tickets");
+			echo form_close();
+		?>
 		
 		<?php
-			echo form_open("airuoft/deleteAll", array("id" => "deleteForm"));
+			echo form_open("admin/deleteAll", array("id" => "deleteForm"));
 			echo form_submit("delete", "Delete all flight and ticket data", "class='deleteButton'");
 			echo form_close();
 		?>

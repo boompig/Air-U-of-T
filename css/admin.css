@@ -2,7 +2,7 @@
  * 	CSS styling for admin pages
  */
 
-button, input[type=submit], a {
+button, input[type=submit] {
 	display: block;
 }
 

@@ -14,9 +14,9 @@ div {
 	margin-top: 5%;
 }
 
-.inputPanel {
+.inputPanel:not(#toPanel) {
 	float: left;
-	width: 400px;
+	margin-right: 20%;
 }
 
 #date, .ui-icon-calendar {
