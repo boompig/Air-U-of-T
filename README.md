@@ -160,6 +160,7 @@ This is the final section of the customer chain. Allow redirect back to main pag
 #### Administrating Flights (admin portal)
 
 URL: `admin.php`
+
 MODEL: `admin.php`
 
 Model:
@@ -177,6 +178,7 @@ Requires the following options:
 ##### Sold Ticket Info
 
 URL: `soldtickets.php`
+
 MODEL: `admin.php`
 
 This page is auto-generated from DB
