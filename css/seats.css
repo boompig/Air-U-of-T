@@ -18,6 +18,29 @@
 	padding: 0;
 }
 
+#instructionsPanel, #seatPanel {
+	float: left;
+}
+
+#seatContainer, #noSeat {
+	margin-top: 20px;
+}
+
+input[type=submit] {
+	margin-top: 30px;
+	display: inline-block;
+}
+
+#seat {
+	background-color: inherit;
+	border: 0 none;
+}
+
+#instructionsPanel {
+	padding-top: 100px;
+	margin-right: 100px;
+}
+
 .seatButton {
 	height: 35px;
 	width: 35px;
@@ -51,7 +74,7 @@
 }
 
 #selectionHelp {
-	margin: 10px auto;
+	margin: 20px auto;
 	text-align: center;
 	width: 380px;
 }

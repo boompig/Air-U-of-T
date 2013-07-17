@@ -90,6 +90,12 @@ class AirUofT extends CI_Controller {
 		
 		$_SESSION["seatNum"] = $_REQUEST["seat"];
 		
+		// TODO debugging to make sure all data is good up to this point
+		// TODO this is not needed
+		foreach (array("from", "to", "date", "time", "flightID", "seatNum") as $k) {
+			$this->logger->log($_SESSION[$k], $k);
+		}
+		
 		// TODO load next view
 	}
 	
@@ -119,12 +125,6 @@ class AirUofT extends CI_Controller {
 		$data["available"] = $this->airuoft_model->get_available_seats($_SESSION["flightID"]);
 		 
 		$_SESSION["validSeats"] = $data["available"];
-		
-		// TODO debugging to make sure all data is good up to this point
-		// TODO this is not needed
-		foreach (array("from", "to", "date", "time", "flightID") as $k) {
-			$this->logger->log($_SESSION[$k], $k);
-		}
 		
 		$data["seats"] = range(0, 2);
 		$data["occupied"] = range(0, 2);

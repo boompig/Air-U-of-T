@@ -30,11 +30,20 @@ $this->load->model("html_utils");
 		<script src="<?=base_url(); ?>/js/utils.js"></script>
 		
 		<script>
+			var selected = false;
+		
 			$(function() {
 				$("#seatButtons").selectable({
 					"selected" : function (e, elem) {
 						var seatIndex = $(".seatButton").index(elem.selected);
 						$("#seat").val(seatIndex);
+						
+						if (! selected) {
+							$("#noSeat").hide();
+							$("#seatContainer").show();
+							$("input[type=submit]").button({"disabled": false});
+							selected = true;
+						}
 					}
 				});
 				
@@ -44,7 +53,7 @@ $this->load->model("html_utils");
 		
 		<style>
 			#seatPanel {
-				margin: 50px auto 0 auto;
+				margin: 30px auto 10px auto;
 				text-align: center;
 				
 				background-image: url("<?=base_url(); ?>/images/plane_hull_lined.png");
@@ -62,7 +71,34 @@ $this->load->model("html_utils");
 	
 	<body>
 		<div id="content">
-			<h1>Choose a seat</h1>
+			<div id="instructionsPanel">
+				<h2>Choose a Seat</h2>
+				
+				<?=form_open("airuoft/customerInfo"); ?>
+				<div id="seatContainer" style="display: none;">
+					<?php
+						$data = HTML_Utils::get_input_array("seat");
+						$data["readonly"] = "readonly";
+						$data["required"] = "required";
+						$data["pattern"] = "/\d/";
+						$data["size"] = 1;
+						
+						echo form_label("Seat: ", "seat");
+						echo form_input($data);
+					?>
+				</div>
+				<div id="noSeat">Please select a seat</div>
+				<?php
+					$attrs = array("name" => "continue", "value" => "Continue", "disabled" => "disabled");
+					echo form_submit($attrs);
+					echo form_close();
+				?>
+				
+				<div id="selectionHelp" class="ui-state-highlight ui-corner-all">
+					<span class="ui-icon ui-icon-info"></span>
+					Available seats are white. Occupied seats are yellow. Current seat selection is green.
+				</div> <!-- end selection help -->
+			</div>
 			
 			<div id="seatPanel">
 				<ol id="seatButtons">
@@ -82,18 +118,6 @@ $this->load->model("html_utils");
 					?>
 				</ol>
 			</div> <!-- end seat panel -->
-			
-			<?=form_open("airuoft/customerInfo"); ?>
-				<input type="hidden" name="seat" id="seat" value="" required="required" />
-			<?php
-				echo form_submit("continue", "Continue");
-				echo form_close();
-			?>
-			
-			<div id="selectionHelp" class="ui-state-highlight ui-corner-all">
-				<span class="ui-icon ui-icon-info"></span>
-				Available seats are white. Occupied seats are yellow. Current seat selection is green.
-			</div> <!-- end selection help -->
 		</div> <!-- end content -->
 	</body>
 </html>
