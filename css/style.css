@@ -25,10 +25,9 @@ select, option, input[type=text], input[type=date] {
  */
 
 .ui-selecting { 
-	background: #FECA40; 
+	background-color: #FECA40; 
 }
 
 .ui-selected { 
-	background: #F39814; 
-	color: white; 
+	background-color: #F39814;
 }

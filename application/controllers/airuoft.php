@@ -34,9 +34,10 @@ class AirUofT extends CI_Controller {
 	 * The $_REQUEST parameter 'date' should be in the format 'yyyy-mm-dd'
 	 * 
 	 * Sets the following session variables:
-	 * 	- 'from'	-	departure campus
-	 *  - 'to'		-	arrival campus
-	 * 	- 'date'	- 	departure date (in the format yyyy-mm-dd)
+	 * 	'from'			-	departure campus
+	 *  'to'			-	arrival campus
+	 * 	'date'			- 	departure date (in the format yyyy-mm-dd)
+	 * 	'validFlights'	-	valid flights
 	 */
 	function searchFlights () {
 		$this->load->library("form_validation");
@@ -78,12 +79,32 @@ class AirUofT extends CI_Controller {
 	}
 	
 	/**
+	 * Transition to customer info page.
+	 * 
+	 * Sets the following session variables:
+	 * 	'seatNum'	-	index of the seat
+	 */
+	function customerInfo () {
+		// TODO check that seat is set
+		// TODO check that the selected seat is valid
+		
+		$_SESSION["seatNum"] = $_REQUEST["seat"];
+		
+		// TODO load next view
+	}
+	
+	/**
 	 * This function is called by flightinfo.php to search for seats
 	 * Load the seats into an array
 	 * 
 	 * Sets the following session variables:
-	 * 	- 'time'		- departure time  (HH:MM:SS) where MM and SS should be zeros
-	 * 	- 'flightID'	- flight ID
+	 * 	'time'		-	departure time  (HH:MM:SS) where MM and SS should be zeros
+	 * 	'flightID'	-	flight ID
+	 * 
+	 * Pass the following variables to the view:
+	 * 	$occupied	- 	Array of occupied seats
+	 * 	$available	-	Array of available seats
+	 * 	$seats		-	Array of all seats
 	 */
 	function searchSeats () {
 		if (! in_array($_REQUEST["flightID"], $_SESSION["validFlights"])) {
@@ -94,14 +115,27 @@ class AirUofT extends CI_Controller {
 		$_SESSION['time'] = $_REQUEST['time'];
 		$_SESSION['flightID'] = $_REQUEST['flightID'];
 		
-		
-		
 		$this->load->model("airuoft_model");
-		$_SESSION["seatNum"] = $this->airuoft_model->get_available_seats($_SESSION["flightID"]);
+		$data["available"] = $this->airuoft_model->get_available_seats($_SESSION["flightID"]);
+		 
+		$_SESSION["validSeats"] = $data["available"];
 		
-		foreach (array("from", "to", "date", "time", "flightID", "seatNum") as $k) {
+		// TODO debugging to make sure all data is good up to this point
+		// TODO this is not needed
+		foreach (array("from", "to", "date", "time", "flightID") as $k) {
 			$this->logger->log($_SESSION[$k], $k);
 		}
+		
+		$data["seats"] = range(0, 2);
+		$data["occupied"] = range(0, 2);
+		
+		foreach ($data["seats"] as $seat) {
+			if (key_exists($seat, $data["available"])) {
+				unset($data["occupied"][$seat]);
+			}
+		}
+		
+		$this->load->view("seats.php", $data);
 	}
 }
 

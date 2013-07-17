@@ -13,6 +13,20 @@ class HTML_Utils extends CI_Model {
 	}
 	
 	/**
+	 * Convert an associative array of attributes to a string.
+	 * So given something like array('x' => 'y', 'z' => 'y'), return "x='y' z='y'"
+	 */
+	function attr_array_to_str ($arr) {
+		$a2 = array();
+		
+		foreach ($arr as $key => $value) {
+			$a2[] = "$key='$value'";
+		}
+		
+		return join(" ", $a2);
+	}
+	
+	/**
 	 * Given an associative array, return an options string to add as 4th parameter to input_dropdown.
 	 * The options string simply glues together the key-value pairs of the associative array, and glues the array together with spaces.
 	 * Add an HTML5 'required' attribute as well.
@@ -20,14 +34,28 @@ class HTML_Utils extends CI_Model {
 	 */
 	function get_dropdown_options($arr) {
 		$arr['required'] = 'required';
-		$a2 = array();
-		
-		foreach ($arr as $key => $value) {
-			$a2[] = $key . "='" . $value . "'";
-		}
-		
-		return join(" ", $a2);
+		return HTML_Utils::attr_array_to_str($arr);
 	}
+	
+	/**
+	 * Surround the given item with the given tag.
+	 */
+	function surround($item, $tag) {
+		return "<$tag>$item</$tag>";
+	}
+	
+	/**
+	 * Improved version of CI's li method.
+	 * @param $item Name of the list item
+	 * @param $attrs Associative list of attributes
+	 */
+	function li($item, $attrs) {
+		// parameter is an associative array of attributes for the li
+		$listAttrs = HTML_Utils::attr_array_to_str($attrs);
+		return "<li $listAttrs>$item</li>";
+	}
+	
+	
 }
 
 ?>

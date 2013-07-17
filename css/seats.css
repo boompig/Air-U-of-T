@@ -1,0 +1,62 @@
+/**
+ * 	CSS for seats view
+ */
+
+#content {
+	margin: 0 auto;
+	text-align: center;
+	width: 800px;
+}
+
+#seatButtons {
+	position: absolute;
+	top: 250px;
+	left: 25px;
+	
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.seatButton {
+	height: 35px;
+	width: 35px;
+	
+	float: left;
+	z-index: 2;
+	
+	background-image: none !important;
+}
+
+.seatButton:nth-child(odd) {
+	margin-left: 2px;
+}
+
+.seatButton:nth-child(even) {
+	margin-left: 35px;
+}
+
+/**
+ * 	Occupied seat should be yellow
+ */
+.seatButton.occupied {
+	background-color: #F5F527;
+}
+
+/** 
+ * Selected seat should be green 	
+ */
+.seatButton.ui-selected, .seatButton.ui-selecting {
+	background-color: #98E01B;
+}
+
+#selectionHelp {
+	margin: 10px auto;
+	text-align: center;
+	width: 380px;
+}
+
+.ui-icon {
+	float: left;
+	margin-left: 10px;
+}
