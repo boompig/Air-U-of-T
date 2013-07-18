@@ -1,0 +1,33 @@
+/**
+ * 	Generic stylesheet
+ */
+
+body {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 1em;
+}
+
+h1, h2 {
+	margin: 0 auto;
+	text-align: center;
+}
+
+select, option, input[type=text], input[type=date] {
+	font-size: 1em;
+}
+
+.error {
+	color: red;
+}
+
+/**
+ * 	JQuery UI styling
+ */
+
+.ui-selecting { 
+	background-color: #FECA40; 
+}
+
+.ui-selected { 
+	background-color: #F39814;
+}

@@ -6,7 +6,7 @@ Second assignment for CSC309
 ## Collaborators
 
 * Daniel Kats (CDF ID g1dbkats) (student number 997492468)
-
+* Jacky Fong (CDF ID c8fongkw) (student number 991686118)
 ## Assignment Specs
 
 * See [CSC309 Website] [1]
@@ -22,8 +22,6 @@ Second assignment for CSC309
 
 This is the gateway for booking flights. 
 
-URL: `index.php`
-
 Summary:
 
 * book one-way tickets between the UTM and St. George
@@ -32,18 +30,22 @@ Summary:
 
 Breakdown:
 
-1. [Collect flight info](#flight-info)
+1. [Collect flight info](#landing-page)
 
-2. [Get seat info](#seat-info)
+2. [Choose a flight](#flight-info)
 
-3. [Get billing info](#billing-info)
+3. [Choose a set](#seat-info)
 
-4. [Display order summary](#summary-info)
+4. [Get billing info](#billing-info)
 
-##### Flight Info
+5. [Display order summary](#summary-info)
 
-URL: `flightinfo.php`
-MODEL: `customer.php`
+
+##### Landing Page
+
+URL: `landing.php`
+
+MODEL: `airuoft.php`
 
 Model:
 
@@ -54,6 +56,25 @@ Collect the following info:
 * Departure campus
 * Departure date
 
+When user selects these parameters:
+
+* retrieve matching flight times
+* redirect to [Flight Info](#flight-info)
+
+##### Flight Info
+
+URL: `flightinfo.php`
+
+MODEL: `airuoft.php`
+
+Model:
+
+* retrieve all flights which are available for the given campus and date
+
+Collect the following info:
+
+* Departure time
+
 Present user with list of available flights matching search parameters that have available space.
 
 * This part is dynamically generated
@@ -62,7 +83,8 @@ Present user with list of available flights matching search parameters that have
 ##### Seat Info
 
 URL: `seats.php`
-MODEL: `customer.php`
+
+MODEL: `airuoft.php`
 
 Model:
 
@@ -106,7 +128,8 @@ When a user confirms, redirect to [Summary](#summary-info)
 ##### Confirmation
 
 URL: `confirmation.php`
-MODEL: `customer.php`
+
+MODEL: `airuoft.php`
 
 Model:
 * submit all ticket info to it, and it writes the info into the Ticket table
@@ -137,6 +160,7 @@ This is the final section of the customer chain. Allow redirect back to main pag
 #### Administrating Flights (admin portal)
 
 URL: `admin.php`
+
 MODEL: `admin.php`
 
 Model:
@@ -154,6 +178,7 @@ Requires the following options:
 ##### Sold Ticket Info
 
 URL: `soldtickets.php`
+
 MODEL: `admin.php`
 
 This page is auto-generated from DB
@@ -255,3 +280,4 @@ NOTE about FirePHP:
 
 * JQuery
 
+* JQuery UI (Redmond Theme)
