@@ -211,7 +211,7 @@ Fields:
 * id INT <key>
 * timetable_id INT <foreign key, references [Timetable](#timetable) table>
 * date DATE
-* available INT <probably a bool>
+* available INT = number of tickets left
 
 About:
 This table is used to keep track of *all* available flights. Initially, should be pre-filled with all flights for 2 days. I think.
