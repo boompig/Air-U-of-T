@@ -61,6 +61,8 @@ class AirUofT extends CI_Controller {
 			// load the main model
 			$this->load->model("airuoft_model");
 			
+			date_default_timezone_set("UTC");
+			
 			// format date correctly for DB
 			$departureDate = DateTime::createFromFormat("Y-m-d", $_REQUEST['date']);
 			

@@ -115,6 +115,7 @@ class AirUofT_Model extends CI_Model {
 	 */
 	function fill_flights() {
 		$this->db->trans_start();
+		date_default_timezone_set("UTC");
 		$date = new DateTime(date("Y-m-d"));
 				
 		foreach (range (1, 15) as $i) {
