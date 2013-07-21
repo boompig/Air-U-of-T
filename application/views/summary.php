@@ -31,18 +31,31 @@ function showVals($arr) {
 
 <html>
 	<head>
-		<title>Confirmation | Air U of T</title>
+		<title>Summary | Air U of T</title>
 		<meta charset="UTF-8" />
+		
+		<!-- Google-hosted JQuery -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		
 		<style>
 			.userField {
 				padding-right: 10px;
 			}
 		</style>
+		
+		<script>
+			$(function() {
+				$("#printButton").click(function() {
+					window.print();
+				});
+			})
+		</script>
 	</head>
 	
 	<body>
-		<h1>Confirmation</h1>
+		<h1>Order Summary</h1>
+		
+		<p>Congratulations! Your ticket is confirmed.</p>
 		
 		<div id="customerInfo">
 			<h3>Customer Info</h3>
@@ -66,17 +79,14 @@ function showVals($arr) {
 					"Destination Campus" => "to", 
 					"Departure Date" => "date",
 					"Departure Time" => "time",
-					"Seat Number" => "seatNum"
+					"Seat Number" => "seatNum",
+					"Flight Number" => "flightID"
 				);
 				
 				showVals($arr);
 			?>
 		</div>
 		
-		<?php
-			echo form_open("airuoft/buyTicket");
-			echo form_submit("submit", "Buy Ticket");
-			echo form_close();
-		?>
+		<button type="button" id="printButton">Print Ticket</button>
 	</body>
 </html>

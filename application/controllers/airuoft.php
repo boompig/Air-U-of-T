@@ -90,7 +90,9 @@ class AirUofT extends CI_Controller {
 		// TODO check that seat is set
 		// TODO check that the selected seat is valid
 		
-		$_SESSION["seatNum"] = $_REQUEST["seat"];
+		// to allow backwards navigation
+		if (key_exists("seat", $_REQUEST))
+			$_SESSION["seatNum"] = $_REQUEST["seat"];
 		
 		// TODO debugging to make sure all data is good up to this point
 		// TODO this is not needed
@@ -141,21 +143,55 @@ class AirUofT extends CI_Controller {
 	}
 	
 	/**
-	 * This function is scalled by billing.php to display a summary of all info entered thus far
+	 * This function is called by billing.php to display a summary of all info entered thus far
 	 * Verify that all customer info is set properly, then redirect to confirmation.php
+	 * 
+	 * Sets the following session variables:
+	 * 	'fName'		-	client first name
+	 * 	'lName'		-	client last name
+	 * 	'ccNum'		-	credit card number
+	 * 	'expDate'	-	expiry date of the card (as a DateTime object)
+	 * 	'expYear'	-	expiry year of credit card
+	 * 	'expMonth'	-	expiry month of credit card
 	 */
 	function confirm () {
 		// TODO validate inputs
 		
 		date_default_timezone_set("UTC");
-		$_SESSION["expDate"] = DateTime::createFromFormat("Y-m-t", $_SESSION['expYear'] . "-" . $_SESSION['expMonth'] . "-00");
+		
 		
 		// once inputs are validated
 		foreach(array("fName", "lName", "ccNum", "expMonth", "expYear") as $k) {
-			$_SESSION[$k] = $_REQUEST[$k];
+			// to support backwards navigation
+			if (key_exists($k, $_REQUEST))
+				$_SESSION[$k] = $_REQUEST[$k];
 		}
 		
+		$_SESSION["expDate"] = DateTime::createFromFormat("Y-m-t", $_SESSION['expYear'] . "-" . $_SESSION['expMonth'] . "-00");
+		
+		
+		
 		$this->load->view("confirmation");
+	}
+	
+	/**
+	 * This function is called by confirmation.php to process the ticket purchase, then display a printable summary.
+	 */
+	function buyTicket () {
+		$this->load->model("airuoft_model");
+		
+		$this->logger->log($_SESSION['expYear'], "year");
+		
+		$result = $this->airuoft_model->create_ticket($_SESSION['fName'], $_SESSION['lName'], $_SESSION['ccNum'], $_SESSION['expMonth'] . $_SESSION['expYear'], $_SESSION['flightID'], $_SESSION['seatNum']);
+		
+		$this->logger->log($result, "result");
+		
+		if ($result) {
+			$this->logger->log("It's Good!", "Ticket Result");
+			$this->load->view("summary");
+		} else {
+			$this->logger->log("Failed =.=", "Ticket Result");
+		}
 	}
 }
 

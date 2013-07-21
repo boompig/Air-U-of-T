@@ -93,7 +93,7 @@ class AirUofT_Model extends CI_Model {
 		
 		$q = "SELECT timetable.time AS departureTime, flight.id AS flightID
 		FROM timetable INNER JOIN flight ON timetable.id=flight.timetable_id
-		WHERE timetable.leavingfrom=$campusFrom AND timetable.goingto=$campusTo AND flight.date='$date' AND flight.available=1;";
+		WHERE timetable.leavingfrom=$campusFrom AND timetable.goingto=$campusTo AND flight.date='$date' AND flight.available>0;";
 		
 		$query = $this->db->query($q);
 		$times = array();
@@ -122,7 +122,8 @@ class AirUofT_Model extends CI_Model {
 			date_add($date, date_interval_create_from_date_string("1 day"));
 			
 			foreach (range (1, 8) as $j) {
-				$q = $this->construct_insert("flight", array("timetable_id" => $j, "date" => date_format($date, "Y-m-d"), "available" => 1));
+				// available field means how many seats are available on the flight
+				$q = $this->construct_insert("flight", array("timetable_id" => $j, "date" => date_format($date, "Y-m-d"), "available" => 3));
 				$this->db->query($q);
 			}
 		}
@@ -157,10 +158,11 @@ class AirUofT_Model extends CI_Model {
 	
 	/**
 	 * Create a brand-new ticket from the passed data.
+	 * Also update flight table's available column.
 	 * Return true iff successfully inserted item.
 	 */
 	function create_ticket ($fName, $lName, $ccNum, $ccExpDate, $flightID, $seatNum) {
-		$data = array(
+		$insertData = array(
 			"first" => $fName,
 			"last" => $lName,
 			"creditcardnumber" => $ccNum,
@@ -168,8 +170,32 @@ class AirUofT_Model extends CI_Model {
 			"flight_id" => $flightID,
 			"seat" => $seatNum
 		);
+		
+		// first, get # of available tickets
+		$q = "SELECT available FROM flight WHERE id=$flightID";
+		$result = $this->db->query($q);
+		// $this->db->where("id", $flightID);
+		// $result = $this->db->get("flight");
+		
+		if ($result->num_rows() > 0) {
+			$n = $result->row(0)->available;
+		} else {
+			$this->logger->log($flightID, "Flight ID");
+			$this->logger->log("Failed to retrieve # available flights", "E");
+			return false;
+		}
+		
+		$this->db->trans_start();
+		// create ticket
+		$this->db->insert("ticket", $insertData);
+		
+		// update available
+		$this->db->where("id", $flightID);
+		$this->db->update("flight", array("available" => $n - 1));
+		
+		$this->db->trans_complete();
 			
-		return $this->$db->insert($data);
+		return $this->db->trans_status();
 	}
 	
 	/**
@@ -209,8 +235,7 @@ class AirUofT_Model extends CI_Model {
 		$this->db->trans_start();
 		
 		foreach (array("flight", "ticket") as $table) {
-			$q = "DELETE FROM $table WHERE 1=1";
-			$this->db->query($q);
+			$this->db->empty_table($table);
 		}
 		
 		$this->db->trans_complete();
