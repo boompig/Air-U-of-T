@@ -98,7 +98,7 @@ class AirUofT extends CI_Controller {
 			$this->logger->log($_SESSION[$k], $k);
 		}
 		
-		// TODO load next view
+		$this->load->view("billing");
 	}
 	
 	/**
@@ -137,7 +137,25 @@ class AirUofT extends CI_Controller {
 			}
 		}
 		
-		$this->load->view("seats.php", $data);
+		$this->load->view("seats", $data);
+	}
+	
+	/**
+	 * This function is scalled by billing.php to display a summary of all info entered thus far
+	 * Verify that all customer info is set properly, then redirect to confirmation.php
+	 */
+	function confirm () {
+		// TODO validate inputs
+		
+		date_default_timezone_set("UTC");
+		$_SESSION["expDate"] = DateTime::createFromFormat("Y-m-t", $_SESSION['expYear'] . "-" . $_SESSION['expMonth'] . "-00");
+		
+		// once inputs are validated
+		foreach(array("fName", "lName", "ccNum", "expMonth", "expYear") as $k) {
+			$_SESSION[$k] = $_REQUEST[$k];
+		}
+		
+		$this->load->view("confirmation");
 	}
 }
 
