@@ -127,7 +127,7 @@ When a user confirms, redirect to [Summary](#summary-info)
 
 ##### Confirmation
 
-URL: `confirmation.php`
+URL: `confirmation.php` (using templating)
 
 MODEL: `airuoft.php`
 
@@ -138,7 +138,7 @@ Regurgitate all info, ask user to confirm
 
 ##### Summary Info
 
-URL: `ticketsummary.php`
+URL: `confirmation.php` (using templating)
 
 Display customer's flight information:
 

@@ -26,3 +26,38 @@ button, input[type=submit] {
 #confirmation {
 	width: 300px;
 }
+
+footer {
+	text-align: center;
+	margin: 10px auto;
+	width: 500px;
+	border: 1px solid #DDDDDD;
+	padding-top: 20px;
+	
+	font-size: 0.8em;
+}
+
+table {
+	margin-top: 10px;
+	/*text-align: center;*/
+	table-layout: fixed;
+	word-wrap: break-word;
+}
+
+tr:hover {
+	background-color: #DFEFFC;
+}
+
+th {
+	text-align: left;
+}
+
+td {
+	/*padding-left: 10px;*/
+	/*margin-right: 20px;*/
+	width: 120px;
+}
+
+td.ccExpDate {
+	width: 180px;
+}

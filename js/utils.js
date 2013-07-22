@@ -1,3 +1,6 @@
+Date.dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+Date.monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December']
+
 /**
  * Created a String.format function, because I was sick of constantly concatenating strings.
  * Works similarly to Python's string format function.

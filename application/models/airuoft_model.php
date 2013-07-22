@@ -202,15 +202,12 @@ class AirUofT_Model extends CI_Model {
 	 * Return an array of tickets. Each ticket is a Ticket object (see the documentation in model/ticket.php)
 	 */
 	function get_tickets () {
-		$this->load->model("ticket");
-		
 		$q = "SELECT ticket.first AS fName, 
 		ticket.last AS lName,
 		ticket.creditcardnumber AS ccNum,
 		ticket.creditcardexpiration AS ccExpDate,
 		ticket.seat AS seatNum,
-		flight.date AS flightDate
-		FROM ticket INNER JOIN flight ON ticket.flight_id=flight.id;";
+		flight.date AS flightDate FROM ticket INNER JOIN flight ON ticket.flight_id=flight.id;";
 		
 		$query = $this->db->query($q);
 		$tickets = array();
@@ -218,9 +215,8 @@ class AirUofT_Model extends CI_Model {
 		if ($query->num_rows() == 0) {
 			$this->logger->log($q, "No result set on fetching tickets with this query: ");
 		} else {
-			foreach ($query->result() as $row) {
-				$f = new Ticket($row->flightDate, $row->seatNum, $row->fName, $row->lName, $row->ccNum, $row->ccExpDate);
-				$tickets[] = $f;
+			foreach ($query->result_array() as $row) {
+				$tickets[] = $row;
 			}
 		}
 		

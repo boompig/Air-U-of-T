@@ -61,6 +61,11 @@ class Admin extends CI_Controller {
 		$this->load->model("airuoft_model");
 		$data["tickets"] = $this->airuoft_model->get_tickets();
 		
+		foreach ($data["tickets"] as &$ticket) {
+			$d = $ticket['ccExpDate'];
+			$ticket['ccExpDate'] = substr($d, 0, 2) . "/" . substr($d, 2, 2);
+		}
+		
 		$this->logger->log($data["tickets"], "Tickets");
 		
 		$this->load->view("soldtickets", $data);
