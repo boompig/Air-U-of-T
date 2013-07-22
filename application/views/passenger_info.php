@@ -6,7 +6,7 @@ header('Expires: 0'); // Proxies.
 $this->load->model("html_utils");
 
 // set $_SESSION variables, so don't error out at the bottom
-foreach (array("fName", "lName", "ccNum", "expMonth", "expYear") as $k) {
+foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k) {
 	if (! array_key_exists($k, $_SESSION))
 		$_SESSION[$k] = "";
 }
@@ -30,6 +30,8 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear") as $k) {
 		
 		<!-- custom style -->
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/style.css" />
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/navbar.css" />
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/error_box.css" />
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/billing.css" />
 		
 		<!-- custom scripts -->
@@ -68,7 +70,7 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear") as $k) {
 				var month = $("#expMonth").val();
 				var year = $("#expYear").val();
 				
-				$("#formError").hide();
+				$(".errorBox").hide();
 				
 				if (isNaN(month) || month.length == 0 || month < 1 || month > 12 || isNaN(year) || year.length == 0) {
 					return false;
@@ -96,11 +98,18 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear") as $k) {
 				$(".ccExp, #ccNum").attr("type", "number");
 				
 				$("#myForm").submit(function () {
-					return checkDate();
+					$("#ccExp").val(String($("#expMonth").val()) + String($("#expYear").val()));
+					
+					// return checkDate();
 				});
 				
 				$("#expYear").blur(function() {
 					checkDate();
+				});
+				
+				$("#expMonth, #expYear").change(function() {
+					$("#ccExp").val(String($("#expMonth").val()) + String($("#expYear").val()));
+					console.log($("#ccExp").val());
 				});
 				
 				$("#expYear").change(function() {
@@ -121,10 +130,12 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear") as $k) {
 	</head>
 	
 	<body>
-		<h1>Billing</h1>
+		<h1>Passenger Info</h1>
+		
+		<?php $this->load->view("navbar") ?>
 		
 		<div id="container">
-			<?=form_open("airuoft/confirm", array("id" => "myForm")); ?>
+			<?=form_open("airuoft/confirmation", array("id" => "myForm")); ?>
 				
 				<fieldset class="userInput" id="nameContainer">
 					<?php
@@ -150,7 +161,7 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear") as $k) {
 						$arr = HTML_Utils::get_input_array("ccNum");
 						$arr['required'] = 'required';
 						$arr['value'] = $_SESSION['ccNum'];
-						$arr['pattern'] = "\d{16}";
+						// $arr['pattern'] = "\d{16}";
 						$arr['size'] = 16;
 						$arr['maxlength'] = 16;
 						$arr['oninvalid'] = "setCustomValidity('Credit card number must be 16 digits long with no dashes or spaces')";
@@ -180,6 +191,8 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear") as $k) {
 						$arr['class'] = 'ccExp';
 						$arr['placeholder'] = "yy";
 						echo form_input($arr);
+						
+						echo "<input type='hidden' name='ccExp' id='ccExp' value='" . $_SESSION['ccExp'] . "' />";
 					?>
 				</fieldset> <!-- end ccContainer -->
 				<?php
@@ -190,7 +203,9 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear") as $k) {
 				
 				<?=form_close(); ?>
 				
-				<div id="formError" class="ui-state-highlight ui-corner-all" style="display: none;">
+				<?php $this->load->view("error_box"); ?>
+				
+				<div class="errorBox ui-state-highlight ui-corner-all" style="display: none;">
 					<p>
 						<span class="ui-icon ui-icon-info"></span>
 						<span>Whoops! It looks like your credit card has expired!</span>

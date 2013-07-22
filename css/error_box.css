@@ -1,0 +1,26 @@
+.errorBox {
+	text-align: center;
+	
+	width: 500px;
+	margin: 20px auto;
+	
+}
+
+.errorBox span, #formError p {
+	text-align: left;
+}
+
+.errorBox .ui-icon {
+	float: left;
+	margin-right: 10px;
+	margin-left: 15px;
+}
+
+.ui-icon-pencil {
+	/*float: left;*/
+	margin: 0 0 0 10px;
+	padding: 0;
+	display: inline-block;
+	
+	cursor: pointer;
+}

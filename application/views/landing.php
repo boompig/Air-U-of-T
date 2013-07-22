@@ -84,14 +84,16 @@ foreach (array("from", "to", "date", "time") as $k) {
 				<?php
 					echo form_label("From");
 					echo form_error("from");
-					echo form_dropdown("from", $campus_options, $_SESSION["from"], HTML_Utils::get_dropdown_options(array("id"=>"from", "class"=>"campusChooser")));
+					$data = array("id"=>"from", "class"=>"campusChooser");
+					echo form_dropdown("from", $campus_options, $_SESSION["from"], HTML_Utils::get_dropdown_options($data));
 				?>
 			</div> <!-- end from panel -->
 			<div id="toPanel" class="inputPanel">
 				<?php
 					echo form_label("To");
 					echo form_error("to");
-					echo form_dropdown("to", $campus_options, $_SESSION["to"], HTML_Utils::get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
+					$data = array("id"=>"to", "class"=>"campusChooser");
+					echo form_dropdown("to", $campus_options, $_SESSION["to"], HTML_Utils::get_dropdown_options($data));
 				?>
 			</div> <!-- end toPanel -->
 			<div id="datePanel" class="inputPanel">

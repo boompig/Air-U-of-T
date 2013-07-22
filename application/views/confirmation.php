@@ -31,7 +31,7 @@ function showVals($arr, $edit=true) {
 		echo "<tr>";
 			echo "<td>";
 			if ($edit && $v == "seatNum") {
-				echo "<a href='airuoft/searchSeats'><span class='ui-icon ui-icon-pencil' title='Change your seat'></span></a>";
+				echo anchor("airuoft/searchSeats", "<span class='ui-icon ui-icon-pencil' title='Change your seat'></span>");
 			}
 			echo "</td>";
 		
@@ -63,6 +63,7 @@ function showVals($arr, $edit=true) {
 		
 		<!-- custom style -->
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/style.css" />
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/navbar.css" />
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/confirmation.css" />
 		
 		<!-- custom scripts -->
@@ -80,6 +81,8 @@ function showVals($arr, $edit=true) {
 	
 	<body>
 		<h1><?=$title?></h1>
+		
+		<?php $this->load->view("navbar"); ?>
 		
 		<div id="content">
 			<div id="accordion" class="ui-accordion ui-widget ui-helper-reset">

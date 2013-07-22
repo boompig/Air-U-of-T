@@ -41,33 +41,6 @@ input[type=text]:valid, input[type=number]:valid, input[type=date]:valid {
 	margin-right: 10px;
 }
 
-#formError {
-	text-align: center;
-	
-	width: 500px;
-	margin: 20px auto;
-	
-}
-
-#formError span, #formError p {
-	text-align: left;
-}
-
-#formError .ui-icon {
-	float: left;
-	margin-right: 10px;
-	margin-left: 15px;
-}
-
-.ui-icon-pencil {
-	/*float: left;*/
-	margin: 0 0 0 10px;
-	padding: 0;
-	display: inline-block;
-	
-	cursor: pointer;
-}
-
 .name {
 	width: 150px;
 }

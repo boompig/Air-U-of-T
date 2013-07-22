@@ -20,7 +20,11 @@ class HTML_Utils extends CI_Model {
 		$a2 = array();
 		
 		foreach ($arr as $key => $value) {
-			$a2[] = "$key='$value'";
+			if ($key == "class" && is_array($value)) {
+				$a2[] = "class='" . implode(" ", $value) . "'";
+			} else {
+				$a2[] = "$key='$value'";
+			}
 		}
 		
 		return join(" ", $a2);
@@ -55,7 +59,19 @@ class HTML_Utils extends CI_Model {
 		return "<li $listAttrs>$item</li>";
 	}
 	
+	function open_div ($arr) {
+		$attrs = HTML_Utils::attr_array_to_str($arr);
+		return "<div $attrs>";
+	}
 	
+	function close_div() {
+		return "</div>";
+	}
+	
+	function span ($contents, $arr) {
+		$attrs = HTML_Utils::attr_array_to_str($arr);
+		return "<span $attrs>$contents</span>";
+	}
 }
 
 ?>

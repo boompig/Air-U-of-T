@@ -35,6 +35,7 @@ $logger = FirePHP::getInstance(true);
 		
 		<!-- custom style -->
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/style.css" />
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/navbar.css" />
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/flight_info.css" />
 		
 		<!-- custom scripts -->
@@ -74,6 +75,8 @@ $logger = FirePHP::getInstance(true);
 	<body>
 		<h1>Choose a Flight</h1>
 		
+		<?php $this->load->view("navbar.php"); ?>
+		
 		<div id="searchPanel">
 			<div id="toolbar">
 				<?php
@@ -88,7 +91,7 @@ $logger = FirePHP::getInstance(true);
 				</div>
 				
 				<div id="toPanel" class="inputPanel">
-					<?php 
+					<?php
 						echo form_label("To");
 						echo form_dropdown("to", $campus_options, $_SESSION['to'], HTML_Utils::get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
 					?>
@@ -116,11 +119,16 @@ $logger = FirePHP::getInstance(true);
 					echo form_close();
 				?>
 				
+			</div> <!-- end datePanel -->
+			
+			<div id="errorPanel" class="ui-state-highlight ui-corner-all" style="display: <?php if (validation_errors()) echo 'block'; else echo 'none'; ?>;">
+				<span class="ui-icon ui-icon-alert"><!-- icon --></span>
+				<span><?=validation_errors(); ?></span>
 			</div>
+			
 			<?php
 				if (count($times) > 0) {
 					$this->table->set_heading(array("Depart", "Arrive", "", ""));
-					// $logger->log($times);
 					$i = 0;
 					foreach($times as $time => $flightID) {
 						$i++;

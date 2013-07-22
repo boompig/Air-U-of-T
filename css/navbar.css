@@ -1,0 +1,61 @@
+/**
+ * 	Styling for navigation bar
+ */
+
+#navbar-before {
+	margin-top: 20px;
+}
+
+#navbar-after {
+	clear: both;
+	margin-top: 10px;
+}
+
+#navbar, #navbar-before, #navbar-after {
+	width: 700px;
+	text-align: center;
+}
+
+#navbar-before, #navbar-after {
+	border: 1px solid #999999;
+	padding: 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#navbar {
+	margin: 10px auto;
+	padding: 10px 0;
+}
+
+.navItem a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.navItem {
+	/*float: left;*/
+	display: inline-block;
+	width: 19%;
+	height: 100%;
+}
+
+.navItem.past {
+	color: #000;
+}
+
+.navItem.present {
+	color: #2E6E9E;
+}
+
+.navItem.future {
+	color: #AAAAAA;
+}
+
+.navIndex {
+	display: block;
+}
+
+.navItem:not(.future) a:hover {
+	color: #F39814;
+}

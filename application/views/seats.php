@@ -24,6 +24,7 @@ $this->load->model("html_utils");
 		
 		<!-- custom style -->
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/style.css" />
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/navbar.css" />
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/seats.css" />
 		
 		<!-- custom scripts -->
@@ -78,6 +79,8 @@ $this->load->model("html_utils");
 	</head>
 	
 	<body>
+		<?php $this->load->view("navbar.php"); ?>
+		
 		<div id="content">
 			<div id="instructionsPanel">
 				<h2>Choose a Seat</h2>
