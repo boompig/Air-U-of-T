@@ -48,6 +48,14 @@ $this->load->model("html_utils");
 				});
 				
 				$("input[type=submit]").button();
+				
+				// if a seat has previously been chosen, then set that seat
+				<?php
+					if (key_exists ('seatNum', $_SESSION)) {
+						$i = $_SESSION['seatNum'];
+						echo "$('#seatButtons .seat$i').trigger('selected');";
+					}
+				?>
 			});
 		</script>
 		

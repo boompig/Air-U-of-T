@@ -91,8 +91,9 @@ class AirUofT extends CI_Controller {
 		// TODO check that the selected seat is valid
 		
 		// to allow backwards navigation
-		if (key_exists("seat", $_REQUEST))
+		if (key_exists("seat", $_REQUEST)) {
 			$_SESSION["seatNum"] = $_REQUEST["seat"];
+		}
 		
 		// TODO debugging to make sure all data is good up to this point
 		// TODO this is not needed
@@ -167,30 +168,43 @@ class AirUofT extends CI_Controller {
 				$_SESSION[$k] = $_REQUEST[$k];
 		}
 		
+		// used to check for repeated submissions in buyTicket
+		$_SESSION['lastView'] = 'confirmation';
+		$this->logger->log($_SESSION['lastView'], 'last view');
+		
 		$_SESSION["expDate"] = DateTime::createFromFormat("Y-m-t", $_SESSION['expYear'] . "-" . $_SESSION['expMonth'] . "-00");
 		
-		
-		
-		$this->load->view("confirmation");
+		$data = array("title" => "Confirmation");
+		$this->load->view("confirmation", $data);
 	}
 	
 	/**
 	 * This function is called by confirmation.php to process the ticket purchase, then display a printable summary.
+	 * Only process DB requests from pages OTHER THAN SUMMARY
+	 * i.e. If summary is refreshed, do not add another item to the DB
 	 */
 	function buyTicket () {
-		$this->load->model("airuoft_model");
+		$this->logger->log($_SESSION['lastView'], 'last view');
 		
-		$this->logger->log($_SESSION['expYear'], "year");
+		$data = array("title" => "Summary");
 		
-		$result = $this->airuoft_model->create_ticket($_SESSION['fName'], $_SESSION['lName'], $_SESSION['ccNum'], $_SESSION['expMonth'] . $_SESSION['expYear'], $_SESSION['flightID'], $_SESSION['seatNum']);
-		
-		$this->logger->log($result, "result");
-		
-		if ($result) {
-			$this->logger->log("It's Good!", "Ticket Result");
-			$this->load->view("summary");
+		if ($_SESSION['lastView'] != 'summary') {
+			
+			$this->load->model("airuoft_model");
+			$result = $this->airuoft_model->create_ticket($_SESSION['fName'], $_SESSION['lName'], $_SESSION['ccNum'], $_SESSION['expMonth'] . $_SESSION['expYear'], $_SESSION['flightID'], $_SESSION['seatNum']);
+			
+			$this->logger->log($result, "result");
+			
+			if ($result) {
+				$this->logger->log("It's Good!", "Ticket Result");
+				$_SESSION['lastView'] = 'summary';
+				
+				$this->load->view("confirmation", $data);
+			} else {
+				$this->logger->log("Failed =.=", "Ticket Result");
+			}
 		} else {
-			$this->logger->log("Failed =.=", "Ticket Result");
+			$this->load->view("confirmation", $data);
 		}
 	}
 }

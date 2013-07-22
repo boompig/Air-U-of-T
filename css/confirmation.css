@@ -1,0 +1,37 @@
+#content {
+	width: 800px;
+	text-align: center;
+	margin: 15px auto;
+}
+
+span, div:not(#content) {
+	text-align: left;
+}
+
+.ui-accordion-content {
+	margin-bottom: 10px;
+}
+
+input[type=submit] {
+	padding: 15px 50px;
+	
+	font-size: 1.3em;
+}
+
+.userVal {
+	padding-left: 30px;
+}
+
+.ui-icon-pencil {
+	margin: 0 0 0 10px;
+	padding: 0;
+	display: inline-block;
+	
+	cursor: pointer;
+}
+
+@media print {
+	.noPrint {
+		display: none;
+	}
+}
