@@ -1,0 +1,89 @@
+/**
+ * 	Stylesheet for billing page
+ */
+
+#container {
+	width: 750px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+input[type=submit] {
+	/*display: block;*/
+	margin: 0 auto;
+	text-align: center;
+}
+
+fieldset legend {
+	font-size: 0.8em;
+}
+
+.userInput {
+	padding: 20px 10px;
+	text-align: left;
+	border: 1px solid #DDDDDD;
+}
+
+#nameContainer {
+	margin-bottom: 20px;
+	margin-top: 10px;
+}
+
+input[type=text]:valid, input[type=number]:valid, input[type=date]:valid {
+	border-color: green;
+}
+
+.userInput label {
+	margin-right: 10px;
+}
+
+#formError {
+	text-align: center;
+	
+	width: 500px;
+	margin: 20px auto;
+	
+}
+
+#formError span, #formError p {
+	text-align: left;
+}
+
+#formError .ui-icon {
+	float: left;
+	margin-right: 10px;
+	margin-left: 15px;
+}
+
+.ui-icon-pencil {
+	/*float: left;*/
+	margin: 0 0 0 10px;
+	padding: 0;
+	display: inline-block;
+	
+	cursor: pointer;
+}
+
+.name {
+	width: 150px;
+}
+
+#fName, #ccNum {
+	margin-right: 20px;
+}
+
+#ccContainer {
+	margin-bottom: 30px;
+}
+
+.ccExp {
+	padding-right: 0;
+}
+
+#expMonth {
+	margin-right: 5px;
+}
+
+#expYear {
+	margin-left: 5px;
+}

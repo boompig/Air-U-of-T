@@ -12,7 +12,7 @@ h1, h2 {
 	text-align: center;
 }
 
-select, option, input[type=text], input[type=date] {
+select, option, input[type=text], input[type=date], input[type=number] {
 	font-size: 1em;
 }
 
