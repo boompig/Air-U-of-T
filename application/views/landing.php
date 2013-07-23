@@ -122,6 +122,6 @@ foreach (array("from", "to", "date", "time") as $k) {
 			<?php
 				echo form_close();
 			?>
-		</div>
+		</div> <!-- end search panel -->
 	</body>
 </html>

@@ -114,8 +114,8 @@ class AirUofT extends CI_Controller {
 		$expDate->add(new DateInterval("P1M"));
 		
 		$result = $today < $expDate;
-		$this->logger->log($today, "today");
-		$this->logger->log($expDate, "expDate");
+		// $this->logger->log($today, "today");
+		// $this->logger->log($expDate, "expDate");
 		
 		if (! $result) {
 			$this->form_validation->set_message("validExpiration", "Whoops! It looks like your credit card has expired!");
@@ -159,6 +159,8 @@ class AirUofT extends CI_Controller {
 		if(! $result) {
 			$this->form_validation->set_message("validFlightID", $this->getHackerMessage("seat"));
 		}
+		
+		return $result;
 	}
 	
 	/**
@@ -182,6 +184,7 @@ class AirUofT extends CI_Controller {
 		// make sure none of the parameters are set in the request
 		foreach ($vars as $k) {
 			if (isset($_REQUEST[$k])) {
+				$this->logger->log($k, "early return");
 				return;
 			}
 		}
@@ -194,9 +197,17 @@ class AirUofT extends CI_Controller {
 	}
 	
 	function logSession() {
-		foreach ($_SESSION as $k => $v) {
-			$this->logger->log($v, $k);
-		}
+		$this->logger->log($_SESSION, "session");
+		// foreach ($_SESSION as $k => $v) {
+			// $this->logger->log($v, $k);
+		// }
+	}
+	
+	function logRequest() {
+		$this->logger->log($_REQUEST, "request");
+		// foreach ($_REQUEST as $k => $v) {
+			// $this->logger->log($v, $k);
+		// }
 	}
 	
 	/**
@@ -226,7 +237,10 @@ class AirUofT extends CI_Controller {
 		$this->form_validation->set_rules("date", "Departure Date", "required|callback_validFlightDate");
 		$this->form_validation->set_error_delimiters("<div class='error'>", "</div>");
 		
-		$this->saveRequest(array("from", "to", "date", "time"));
+		$this->saveRequest(array("from", "to", "date"));
+		$this->setRequest(array("from", "to", "date"));
+		
+		$this->logRequest();
 		
 		if ($this->form_validation->run()) {
 			
@@ -292,6 +306,11 @@ class AirUofT extends CI_Controller {
 			$this->logSession();
 			$this->load->view("seats", $data);
 		} else {
+			$this->logger->log("Failed validation on flights");
+			$this->logger->log(validation_errors(), "errors");
+			$this->logger->log($this->validFlightTime($_REQUEST["time"]), "valid flight time?");
+			$this->logger->log($this->validFlightID($_REQUEST["flightID"]), "valid flight ID?");
+			$this->logRequest();
 			$this->searchFlights();
 		}
 	}
@@ -303,6 +322,8 @@ class AirUofT extends CI_Controller {
 	 * 	'seatNum'	-	index of the seat
 	 */
 	function customerInfo () {
+		$this->setRequest(array("seatNum"));
+		
 		$this->load->library("form_validation");
 		$this->form_validation->set_rules("seatNum", "Seat Number", "required|callback_validSeat");
 		
@@ -311,6 +332,9 @@ class AirUofT extends CI_Controller {
 			$this->logSession();
 			$this->load->view("passenger_info");
 		} else {
+			$this->logger->log("Failed seat number validation");
+			$this->logger->log($this->validSeat($_REQUEST["seatNum"]), "valid seat num?");
+			$this->logger->log(validation_errors(), "errors");
 			$this->searchSeats();
 		}
 	}
@@ -347,7 +371,8 @@ class AirUofT extends CI_Controller {
 			$data = array("title" => "Confirmation");
 			$this->load->view("confirmation", $data);
 		} else {
-			$this->customerInfo();	
+			$this->logSession();
+			$this->customerInfo();
 		}
 	}
 	
