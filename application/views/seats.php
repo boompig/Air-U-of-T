@@ -37,7 +37,7 @@ $this->load->model("html_utils");
 				$("#seatButtons").selectable({
 					"selected" : function (e, elem) {
 						var seatIndex = $(".seatButton").index(elem.selected);
-						$("#seat").val(seatIndex);
+						$("#seatNum").val(seatIndex);
 						
 						if (! selected) {
 							$("#noSeat").hide();
@@ -88,7 +88,7 @@ $this->load->model("html_utils");
 				<?=form_open("airuoft/customerInfo"); ?>
 				<div id="seatContainer" style="display: none;">
 					<?php
-						$data = HTML_Utils::get_input_array("seat");
+						$data = HTML_Utils::get_input_array("seatNum");
 						$data["readonly"] = "readonly";
 						$data["required"] = "required";
 						$data["pattern"] = "/\d/";

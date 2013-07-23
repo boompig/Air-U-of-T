@@ -36,6 +36,9 @@ class AirUofT extends CI_Controller {
 		$this->campuses = array("UTSG" => "St. George", "UTM" => "Mississauga");
 		$this->flightTimes = array(8, 10, 14, 17);
 		$this->seats = range(0, 2);
+		
+		// set this globally
+		date_default_timezone_set("UTC");
 	}
 	
 	function getHackerMessage($field) {
@@ -63,6 +66,7 @@ class AirUofT extends CI_Controller {
 	 * 	3. It is no more than 2 weeks in the future
 	 */
 	function validFlightDate($flightDateStr) {
+		date_default_timezone_set("UTC");
 		$flightDate = DateTime::createFromFormat("Y-m-d", $flightDateStr);
 		
 		if ($flightDate === false) {
@@ -70,6 +74,7 @@ class AirUofT extends CI_Controller {
 			return false;
 		}
 		
+		date_default_timezone_set("UTC");
 		$today = new DateTime();
 		$today->setTime(0, 0, 0);
 		$flightDate->setTime(0, 0, 0);
@@ -97,6 +102,7 @@ class AirUofT extends CI_Controller {
 	 * 	2. It is in the future
 	 */
 	function validExpiration($expDateStr) {
+		date_default_timezone_set("UTC");
 		$expDate = DateTime::createFromFormat("dmy", "01" . $expDateStr);
 		if ($expDate === false) {
 			$this->form_validation->set_message("validExpiration", $this->getHackerMessage("CC expiration date"));
@@ -167,6 +173,26 @@ class AirUofT extends CI_Controller {
 		}
 	}
 	
+	/**
+	 * The opposite of saveRequest - puts session variables into Request, to re-run validation.
+	 * This allows saving variables between states without sacrificing validative power.
+	 * ONLY PERFORM THIS ACTION IF REQUEST PARAM NOT SET
+	 */
+	function setRequest($vars) {
+		// make sure none of the parameters are set in the request
+		foreach ($vars as $k) {
+			if (isset($_REQUEST[$k])) {
+				return;
+			}
+		}
+		
+		foreach ($vars as $k) {
+			if (isset($_SESSION[$k])) {
+				$_REQUEST[$k] = $_SESSION[$k];
+			}
+		}
+	}
+	
 	function logSession() {
 		foreach ($_SESSION as $k => $v) {
 			$this->logger->log($v, $k);
@@ -203,24 +229,19 @@ class AirUofT extends CI_Controller {
 		$this->saveRequest(array("from", "to", "date", "time"));
 		
 		if ($this->form_validation->run()) {
-			// load the main model
-			$this->load->model("airuoft_model");
 			
 			date_default_timezone_set("UTC");
-			
-			// format date correctly for DB
 			$departureDate = DateTime::createFromFormat("Y-m-d", $_REQUEST['date']);
 			
-			// query DB for flight times
+			$this->load->model("airuoft_model");
 			$data["times"] = $this->airuoft_model->get_available_flights($_REQUEST['from'], $_REQUEST['to'], date_format($departureDate, "Y-m-d"));
 			
 			// THIS IS VERY IMPORTANT:
 			// remember valid flightID's in the $_SESSION variable, so only valid times can be booked (i.e. those returned to the user)
 			$_SESSION["validFlights"] = array_values($data["times"]);
 			
-			$this->logger->log($_SESSION['validFlights']);
+			$this->logSession();
 			
-			// redirect to flight info, where user can pick a flight
 			$this->load->view("flightinfo", $data);
 		} else {
 			$this->index();
@@ -247,8 +268,10 @@ class AirUofT extends CI_Controller {
 		$this->form_validation->set_rules("flightID", "Flight Time", "required|callback_validFlightID");
 		$this->form_validation->set_rules("time", "Flight Time", "required|callback_validFlightTime");
 		
+		$this->setRequest(array("flightID", "time"));
+		
 		// adding session check allows for inter-view navigation
-		if ((key_exists("flightID", $_SESSION) && key_exists("time", $_SESSION)) || $this->form_validation->run()) {
+		if ($this->form_validation->run()) {
 			// only set these once they are verified
 			$this->saveRequest(array("time", "flightID"));
 			
@@ -266,6 +289,7 @@ class AirUofT extends CI_Controller {
 				}
 			}
 			
+			$this->logSession();
 			$this->load->view("seats", $data);
 		} else {
 			$this->searchFlights();
@@ -280,11 +304,11 @@ class AirUofT extends CI_Controller {
 	 */
 	function customerInfo () {
 		$this->load->library("form_validation");
-		$this->form_validation->set_rules("seat", "Seat Number", "required|callback_validSeat");
+		$this->form_validation->set_rules("seatNum", "Seat Number", "required|callback_validSeat");
 		
-		$this->logSession();
-		
-		if (isset($_SESSION["seatNum"]) || $this->form_validation->run()) {
+		if ($this->form_validation->run()) {
+			$this->saveRequest(array("seatNum"));
+			$this->logSession();
 			$this->load->view("passenger_info");
 		} else {
 			$this->searchSeats();
@@ -309,21 +333,17 @@ class AirUofT extends CI_Controller {
 		$this->form_validation->set_rules("lName", "Last Name", "trim|required");
 		$this->form_validation->set_rules("ccNum", "Credit Card Number", "trim|required|regex_match[/\d{16}/]");
 		$this->form_validation->set_rules("ccExp", "Credit Card Expiration Date", "required|callback_validExpiration");
-		// $this->form_validation->set_rules("expMonth")
+		
+		$this->saveRequest(array("fName", "lName", "ccNum", "ccExp", "expMonth", "expYear"));
+		$this->setRequest(array("fName", "lName", "ccNum", "ccExp", "expMonth", "expYear"));
 		
 		if ($this->form_validation->run()) {
-			date_default_timezone_set("UTC");
-		
-			// once inputs are validated
-			// note that expMonth and expYear are not really used for anything, so we can leave them alone
-			$this->saveRequest(array("fName", "lName", "ccNum", "ccExp", "expMonth", "expYear"));
-			
-			// used to check for repeated submissions in buyTicket
 			$_SESSION['lastView'] = 'confirmation';
-			$this->logger->log($_SESSION['lastView'], 'last view');
 			
+			date_default_timezone_set("UTC");
 			$_SESSION["expDate"] = DateTime::createFromFormat("dmy", "01" . $_SESSION['ccExp']);
 			
+			$this->logSession();
 			$data = array("title" => "Confirmation");
 			$this->load->view("confirmation", $data);
 		} else {
@@ -338,7 +358,6 @@ class AirUofT extends CI_Controller {
 	 */
 	function buyTicket () {
 		$this->logger->log($_SESSION['lastView'], 'last view');
-		
 		$data = array("title" => "Summary");
 		
 		if (isset($_SESSION['lastView']) && $_SESSION['lastView'] != 'summary') {
@@ -354,11 +373,21 @@ class AirUofT extends CI_Controller {
 				
 				$this->load->view("confirmation", $data);
 			} else {
+				// TODO have this show up on another page
 				$this->logger->log("Failed =.=", "Ticket Result");
 			}
 		} else {
-			$this->confirm();
+			// loading confirmation view, but as summary
+			$this->load->view("confirmation", $data);
 		}
+	}
+	
+	/**
+	 * Unset everything from $_SESSION variable. Start over.
+	 */
+	function reset () {
+		$_SESSION = array();
+		$this->index();
 	}
 }
 

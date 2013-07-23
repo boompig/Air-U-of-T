@@ -13,7 +13,7 @@
 
 #navbar, #navbar-before, #navbar-after {
 	width: 700px;
-	text-align: center;
+	text-align: center !important;
 }
 
 #navbar-before, #navbar-after {
@@ -34,7 +34,7 @@
 }
 
 .navItem {
-	/*float: left;*/
+	text-align: center !important;
 	display: inline-block;
 	width: 19%;
 	height: 100%;
@@ -53,6 +53,7 @@
 }
 
 .navIndex {
+	text-align: center !important;
 	display: block;
 }
 

@@ -12,7 +12,7 @@
 			"searchSeats" => "Choose Seat", 
 			"customerInfo" => "Passenger Info", 
 			"confirmation" => "Confirmation", 
-			"summary" => "Summary"
+			"buyTicket" => "Summary"
 		);
 		
 		$thisIndex = array_search($title, array_keys($titles));

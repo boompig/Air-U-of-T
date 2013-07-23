@@ -131,12 +131,18 @@ function showVals($arr, $edit=true) {
 			<?php
 				if ($title == "Confirmation") {
 					echo form_open("airuoft/buyTicket");
-					echo form_submit("submit", "Buy Ticket");
+					echo form_submit(array("name" => "submit", "value" => "Buy Ticket", "id" => "buyButton"));
 					echo form_close();
 				} else {
 					// summary
 					// $(\'.noPrint\').hide().css(\'display\', \'none\'); 
 					echo '<button type="button" class="noPrint" id="printButton" onclick="window.print()">Print Ticket</button>';
+					
+					// option to start over
+					// echo "<span id='resetButton' class='ui-icon ui-icon-cancel' title='Start Over'></span>";
+					echo form_open("airuoft/reset", array("id" => "resetForm"));
+					echo form_submit(array("name" => "reset", "value" => "Start Over", "id" => "resetButton"));
+					echo form_close();
 				}
 			?>
 		</div> <!-- end content -->
