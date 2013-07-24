@@ -46,16 +46,10 @@ Flight.setupCampusChooser = function (selector) {
 	$(selector).find("option[value='']").attr("disabled", "disabled");
 	
 	$(selector).change(function () {
-		var clicked = 
-		
 		Flight.changeOtherCampus($(this).attr("id"), $(this).val());
 		
-		// var form = $(this).closest("form");
-		// var validator = $(form).validate();
-		// validator.element(this);
+		// revalidate complimentary field
 		var otherField = Flight.otherCampusField($(this).attr("id"));
-		if ($("#" + otherField).hasClass("invalid")) {
-			$("#" + otherField).change();
-		}
+		$("#" + otherField).valid();
 	});
 };
