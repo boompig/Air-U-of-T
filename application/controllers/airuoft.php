@@ -252,7 +252,7 @@ class AirUofT extends CI_Controller {
 			
 			// THIS IS VERY IMPORTANT:
 			// remember valid flightID's in the $_SESSION variable, so only valid times can be booked (i.e. those returned to the user)
-			$_SESSION["validFlights"] = array_values($data["times"]);
+			$_SESSION["validFlights"] = array_keys($data["times"]);
 			
 			$this->logSession();
 			

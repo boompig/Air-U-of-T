@@ -127,11 +127,11 @@ $logger = FirePHP::getInstance(true);
 			
 			<?php
 				if (count($times) > 0) {
-					$this->table->set_heading(array("Depart", "Arrive", "", ""));
+					$this->table->set_heading(array ("Depart", "Arrive", "Seats Available", "", ""));
 					$i = 0;
-					foreach($times as $time => $flightID) {
-						$i++;
-						$this->table->add_row(array($time, preg_replace("/00/", "30", $time, 1), "<button type='button' class='selectButton'>Select</button>", "<span class='flightID' style='display: none;'>$flightID</span>"));
+					foreach($times as $flightID => $arr) {
+						// $i++;
+						$this->table->add_row(array ($arr["time"], preg_replace("/00/", "30", $arr["time"], 1), $arr["numSeats"], "<button type='button' class='selectButton'>Select</button>", "<span class='flightID' style='display: none;'>" . $flightID . "</span>"));
 					}
 					
 					echo $this->table->generate();

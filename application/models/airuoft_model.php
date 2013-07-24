@@ -80,7 +80,7 @@ class AirUofT_Model extends CI_Model {
 	}
 	
 	/**
-	 * Return an associative array of times mapping to flight IDs that fit the search criteria.
+	 * Return an associative array of flightIDs mapping to array(time => flightTime, numSeats => numSeatsAvailable) that fit the search criteria.
 	 * @param $from Departure campus (one of UTM, UTSG)
 	 * @param $to Destination campus (one of UTM, UTSG)
 	 * @param $date Departure date (in the format yyyy-mm-dd)
@@ -91,7 +91,7 @@ class AirUofT_Model extends CI_Model {
 		$campusFrom = $this->campuses[$from];
 		$campusTo = $this->campuses[$to];
 		
-		$q = "SELECT timetable.time AS departureTime, flight.id AS flightID
+		$q = "SELECT timetable.time AS departureTime, flight.id AS flightID, flight.available as numSeats
 		FROM timetable INNER JOIN flight ON timetable.id=flight.timetable_id
 		WHERE timetable.leavingfrom=$campusFrom AND timetable.goingto=$campusTo AND flight.date='$date' AND flight.available>0;";
 		
@@ -102,7 +102,7 @@ class AirUofT_Model extends CI_Model {
 			$this->logger->log($q, "No result set on fetching flights with this query: ");
 		} else {
 			foreach ($query->result() as $row) {
-				$times[$row->departureTime] = $row->flightID;
+				$times[$row->flightID] = array("time" => $row->departureTime, "numSeats" => $row->numSeats);
 			}
 		}
 		
