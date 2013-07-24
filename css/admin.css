@@ -2,6 +2,16 @@
  * 	CSS styling for admin pages
  */
 
+#title {
+	margin: 4% auto 3% auto;
+}
+
+#content {
+	margin: 10px auto 0 auto;
+	text-align: center;
+	width: 600px;
+}
+
 button, input[type=submit] {
 	display: block;
 }
@@ -38,26 +48,26 @@ footer {
 }
 
 table {
-	margin-top: 10px;
+	margin: 10px auto 0 auto;
 	/*text-align: center;*/
 	table-layout: fixed;
 	word-wrap: break-word;
 }
 
-tr:hover {
+tbody tr:hover {
 	background-color: #DFEFFC;
 }
 
 th {
+	/*text-align: center;*/
 	text-align: left;
 }
 
 td {
-	/*padding-left: 10px;*/
-	/*margin-right: 20px;*/
 	width: 120px;
 }
 
-td.ccExpDate {
+td.ccExpDate, td.seatNum {
 	width: 180px;
+	text-align: center;
 }

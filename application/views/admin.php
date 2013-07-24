@@ -60,41 +60,43 @@ header('Expires: 0'); // Proxies.
 	</head>
 	
 	<body>
-		<h1>Admin Portal</h1>
+		<h1 id="title">Air U of T Admin Portal</h1>
 		
-		<?php
-			echo form_open("admin/createFlights");
-			echo form_submit("create", "Populate flight table for next 14 days");
-			echo form_close();
-		?>
-		
-		<?php
-			echo form_open("admin/getTickets");
-			echo form_submit("tickets", "View sold tickets");
-			echo form_close();
-		?>
-		
-		<?php
-			echo form_open("admin/deleteAll", array("id" => "deleteForm"));
-			echo form_submit("delete", "Delete all flight and ticket data", "class='deleteButton'");
-			echo form_close();
-		?>
-		
-		<div id="dialog-confirm-delete" title="Delete All Data?">
-			<p><span class="ui-icon ui-icon-alert"><!-- icon --></span>
-				Are you sure you want to delete all flight and ticket data?
-			</p>
-		</div>
-		
-		<div id="confirmation" class="ui-state-highlight ui-corner-all" style="display: <?php if (isset($result)) echo "block"; else echo "none";?>;">
-			<p>
-				<span class="ui-icon ui-icon-info"></span>
-				<?php
-					if (isset($result)) {
-						echo $result["msg"];
-					}
-				?>
-			</p>
+		<div id="content">
+			<?php
+				echo form_open("admin/createFlights");
+				echo form_submit("create", "Populate flight table for next 14 days");
+				echo form_close();
+			?>
+			
+			<?php
+				echo form_open("admin/getTickets");
+				echo form_submit("tickets", "View sold tickets");
+				echo form_close();
+			?>
+			
+			<?php
+				echo form_open("admin/deleteAll", array("id" => "deleteForm"));
+				echo form_submit("delete", "Delete all flight and ticket data", "class='deleteButton'");
+				echo form_close();
+			?>
+			
+			<div id="dialog-confirm-delete" title="Delete All Data?">
+				<p><span class="ui-icon ui-icon-alert"><!-- icon --></span>
+					Are you sure you want to delete all flight and ticket data?
+				</p>
+			</div>
+			
+			<div id="confirmation" class="ui-state-highlight ui-corner-all" style="display: <?php if (isset($result)) echo "block"; else echo "none";?>;">
+				<p>
+					<span class="ui-icon ui-icon-info"></span>
+					<?php
+						if (isset($result)) {
+							echo $result["msg"];
+						}
+					?>
+				</p>
+			</div>
 		</div>
 	</body>
 </html>

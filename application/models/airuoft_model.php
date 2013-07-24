@@ -207,7 +207,7 @@ class AirUofT_Model extends CI_Model {
 		ticket.creditcardnumber AS ccNum,
 		ticket.creditcardexpiration AS ccExpDate,
 		ticket.seat AS seatNum,
-		flight.date AS flightDate FROM ticket INNER JOIN flight ON ticket.flight_id=flight.id;";
+		flight.date AS flightDate FROM ticket INNER JOIN flight ON ticket.flight_id=flight.id ORDER BY flight.date DESC;";
 		
 		$query = $this->db->query($q);
 		$tickets = array();
