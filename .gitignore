@@ -4,5 +4,3 @@
 .project
 
 # do not keep experimental files under source control
-test
-misc

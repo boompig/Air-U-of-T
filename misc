@@ -1,0 +1,8 @@
+# This will bind local port 3306 to the CDF database
+ssh -L 3306:bungle07.cs.toronto.edu:3306 -N g1dbkats@cdf.toronto.edu
+
+# show error log
+## on Mac:
+cat /var/log/apache2/error_log
+## on Linux:
+cat /var/log/apache2/error.log
