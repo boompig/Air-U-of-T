@@ -6,7 +6,7 @@ header('Expires: 0'); // Proxies.
 $this->load->model("html_utils");
 
 $campus_options = array(
-	"" => " -- Choose a Campus --",
+	"" => "&nbsp;-- Choose a Campus --&nbsp;",
 	"UTSG" => "St. George",
 	"UTM" => "Mississauga"
 );
@@ -32,6 +32,10 @@ foreach (array("from", "to", "date", "time") as $k) {
 		<!-- Google-hosted JQuery UI -->
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		
+		<!-- JQuery Form Validator -->
+		<script src="http://jquery.bassistance.de/validate/jquery.validate.js"></script>
+		<script src="http://jquery.bassistance.de/validate/additional-methods.js"></script>
+		
 		<!-- JQuery UI theme -->
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" />
 		
@@ -41,15 +45,35 @@ foreach (array("from", "to", "date", "time") as $k) {
 		
 		<!-- custom scripts -->
 		<script src="<?=base_url(); ?>/js/utils.js"></script>
+		<script src="<?=base_url(); ?>/js/form_validate.js"></script>
 		<script src="<?=base_url(); ?>/js/flight.js"></script>
 		
 		<script>
 			$(function() {
-				f = new Flight();
-				f.setupCampusChooser(".campusChooser");
+				"use strict";
 				
-				// I can't seem to figure out how to set this up in CI, so will use JS
-				$("#date").attr("type", "date");
+				$("select, input[type=text]").each(function() {
+					var name = $(this).attr("name");
+					var d = $("<div class='invalid' generated='true'></div>").attr("for", name);
+					$(this).before(d);
+				});
+				
+				$.validator.messages["required"] = "This field is required";
+				
+				$.validator.setDefaults({
+					"errorClass" : "invalid",
+					"errorElement" : "div",
+					"validClass" : "valid",
+					"success" : "valid"
+				});
+				
+				// custom validator functions
+				$.validator.addMethod ("validDateFormat", validDateFormat, "Date expected in format YYYY-MM-DD");
+				$.validator.addMethod ("validDate", validDate, "Invalid date given");
+				$.validator.addMethod ("checkFutureDate", checkFutureDate, "Date must be in the future");
+				$.validator.addMethod ("validCampus", validCampus, "Campus must be one of UTSG, UTM");
+				
+				Flight.setupCampusChooser(".campusChooser");
 				
 				$("#date").datepicker({
 					minDate: "+1D",
@@ -57,11 +81,25 @@ foreach (array("from", "to", "date", "time") as $k) {
 					dateFormat: "yy-mm-dd" // this line actually means yyyy-mm-dd
 				});
 				
-				// $("input[type=text], select").after($("<div class='errors'></div>"));
-				
-				$("form").submit(function() {
-					return f.validate_inputs();
+				$("form").validate({
+					"rules" : {
+						"date" : {
+							"required" : true,
+							"validDateFormat" : true,
+							"validDate" : true,
+							"checkFutureDate" : true
+						},
+						"from" : {
+							"required" : true,
+							"validCampus" : true,
+						},
+						"to" : {
+							"required" : true,
+							"validCampus" : true
+						}
+					}
 				});
+				
 				
 				$("input[type=submit], button").button();
 			});
@@ -69,7 +107,7 @@ foreach (array("from", "to", "date", "time") as $k) {
 	</head>
 	
 	<body>
-		<h1>Landing Page</h1>
+		<h1 id="title">Air U of T</h1>
 		
 		<div id="logoContainer">
 			<!-- <img id="logo" src="<?=base_url() ?>/images/blacksheep.jpg" /> -->
@@ -104,20 +142,20 @@ foreach (array("from", "to", "date", "time") as $k) {
 					$arr = HTML_Utils::get_input_array("date");
 					$arr['value'] = $_SESSION['date'];
 					$arr['size'] = 10;
+					$arr['placeholder'] = "yyyy-mm-dd";
 					
-					// stuff for client-side validation
-					$arr['required'] = "required";
-					$arr['pattern'] = "\d{4}\-\d{2}\-\d{2}";
 					echo form_input($arr);
 				?>
 				<!-- empty link to get icon -->
 				<a href="#">
 					<span class="ui-state-default ui-corner-all ui-icon ui-icon-calendar"></span>
 				</a>
+			</div> <!-- end datePanel -->
+			<div id="submitPanel" class="inputPanel">
+				<?php
+					echo form_submit('search', 'Search Flights');
+				?>
 			</div>
-			<?php
-				echo form_submit('search', 'Search Flights');
-			?>
 			<!-- </div> -->
 			<?php
 				echo form_close();

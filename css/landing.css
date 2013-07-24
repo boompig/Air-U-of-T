@@ -9,19 +9,27 @@ div {
 	/*border: 1px solid #000;*/
 }
 
+#title {
+	margin: 4% 0 0 0;
+	padding: 0;
+}
+
 #searchPanel {
 	width: 800px;
-	margin: 80px auto 0 auto;
+	margin: 1% auto 0 auto;
 	text-align: center;
 }
 
 .inputPanel {
 	text-align: left;
+	width: 46%;
+	display: inline-block;
 }
 
-.inputPanel:not(#toPanel) {
-	float: left;
-	margin-right: 20%;
+#fromPanel, #datePanel {
+	margin-right: 3%;
+	margin-top: 5%;
+	margin-left: 3%;
 }
 
 #date, .ui-icon-calendar {
@@ -40,22 +48,6 @@ input[type=text] {
 	padding-bottom: 2px;
 }
 
-#datePanel {
-	margin-top: 50px;
-}
-
-#datePanel {
-	clear: both;
-}
-
-input[type=submit] {
-	clear: both;
-	display: block;
-	position: relative;
-	left: 200px;
-	top: 80px;
-}
-
 label {
 	display: block;
 	
@@ -64,7 +56,7 @@ label {
 	left: 6px;
 }
 
-.error {
+.error, div.invalid {
 	font-size: .8em;
 	margin-bottom: 5px;
 	margin-left: 6px;

@@ -16,7 +16,7 @@ select, option, input[type=text], input[type=date], input[type=number] {
 	font-size: 1em;
 }
 
-.error {
+.error, div.invalid {
 	color: red;
 }
 
@@ -30,4 +30,12 @@ select, option, input[type=text], input[type=date], input[type=number] {
 
 .ui-selected { 
 	background-color: #F39814;
+}
+
+input[type=text].invalid, select.invalid {
+	box-shadow: 0 0 0.4em red, 0 0 0.3em red;
+}
+
+input[type=text].valid, select.valid {
+	box-shadow: 0 0 0.4em green, 0 0 0.3em green;
 }

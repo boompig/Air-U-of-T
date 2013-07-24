@@ -3,16 +3,18 @@
  * Requires Utils static class.
  */
 function Flight () {
-	this.campuses = ["UTM", "UTSG"];
 }
+
+Flight.campuses = ["UTM", "UTSG"];
 
 /**
  * Given that a given field has changed value, alter the other campus field to the opposite value.
  */
-Flight.prototype.changeOtherCampus = function (field, value) {
+Flight.changeOtherCampus = function (field, value) {
 	"use strict";
 	
-	var otherField = field == "to" ? "from" : "to", otherValue;
+	var otherField, otherValue;
+	otherField = Flight.otherCampusField(field);
 	
 	if (value == "UTSG") {
 		otherValue = "UTM";
@@ -26,48 +28,34 @@ Flight.prototype.changeOtherCampus = function (field, value) {
 };
 
 /**
+ * Return the name of the complimentary campus field.
+ * @param {String} thisField Name of this field
+ */
+Flight.otherCampusField = function (thisField) {
+	return thisField == "to" ? "from" : "to";
+};
+
+/**
  * Set up the campus choosers on this page.
  * @param {String} selector A selector to choose all the campus choosers on the page.
  */
-Flight.prototype.setupCampusChooser = function (selector) {
+Flight.setupCampusChooser = function (selector) {
 	"use strict";
-	
-	var that = this;
 	
 	// couldn't figure out how to do this in CI, doing it in JS instead
 	$(selector).find("option[value='']").attr("disabled", "disabled");
 	
-	$(selector).change(function() {
-		that.changeOtherCampus($(this).attr("id"), $(this).val());
+	$(selector).change(function () {
+		var clicked = 
+		
+		Flight.changeOtherCampus($(this).attr("id"), $(this).val());
+		
+		// var form = $(this).closest("form");
+		// var validator = $(form).validate();
+		// validator.element(this);
+		var otherField = Flight.otherCampusField($(this).attr("id"));
+		if ($("#" + otherField).hasClass("invalid")) {
+			$("#" + otherField).change();
+		}
 	});
-};
-
-/**
- * Validate the input on submit. Return True iff all inputs are valids.
- * This is actually not strictly necessary since HTML5 validation is taking care of this.
- */
-Flight.prototype.validate_inputs = function () {
-	"use strict";
-	
-	var fields = ["to", "from"];
-	
-	for (var i = 0; i < fields.length; i++) {
-		var val = $("#{0} option:selected".format(fields[i])).val();
-		if (this.campuses.indexOf(val) == -1) {
-			return false;
-		}
-	}
-	
-	if (! Utils.isValidDate($("#date").val())) {
-		return false;
-	}
-	
-	if ($("#time").length > 0) {
-		var timePattern = /\d{2}\:00\:00/
-		if (! $("#time").val().match(timePattern)) {
-			return false;
-		}
-	}
-	
-	return true;
 };

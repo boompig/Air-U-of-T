@@ -2,6 +2,18 @@ Date.dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Sa
 Date.monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December']
 
 /**
+ * Return number of days in the specified month.
+ * From this question on SOF:
+ * http://stackoverflow.com/q/315760/755934
+ * 
+ * @param {Number} month
+ * @param {Number} year
+ */
+Date.daysInMonth = function (month, year) {
+	return new Date(year, month, 0).getDate();
+}
+
+/**
  * Created a String.format function, because I was sick of constantly concatenating strings.
  * Works similarly to Python's string format function.
  */

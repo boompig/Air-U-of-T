@@ -10,8 +10,8 @@ div {
 }
 
 #searchPanel {
-	margin-left: 5%;
-	margin-top: 3%;
+	text-align: center;
+	margin: 3% auto 0 auto;
 	width: 1000px;
 }
 

@@ -44,8 +44,7 @@ $logger = FirePHP::getInstance(true);
 		
 		<script>
 			$(function() {
-				f = new Flight();
-				f.setupCampusChooser(".campusChooser");
+				Flight.setupCampusChooser(".campusChooser");
 				
 				$("#date").datepicker({
 					minDate: "+1D",
@@ -65,9 +64,9 @@ $logger = FirePHP::getInstance(true);
 					$("#seatForm").submit();
 				});
 				
-				$("form").submit(function() {
-					f.validate_inputs();
-				});
+				// $("form").submit(function() {
+					// f.validate_inputs();
+				// });
 			});
 		</script>
 	</head>
