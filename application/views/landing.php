@@ -70,10 +70,15 @@ foreach (array("from", "to", "date", "time") as $k) {
 				// custom validator functions
 				$.validator.addMethod ("validDateFormat", validDateFormat, "Date expected in format YYYY-MM-DD");
 				$.validator.addMethod ("validDate", validDate, "Invalid date given");
-				$.validator.addMethod ("checkFutureDate", checkFutureDate, "Date must be in the future");
+				$.validator.addMethod ("checkFutureDate", checkFutureDate, "You may not book flights in the past");
 				$.validator.addMethod ("validCampus", validCampus, "Campus must be one of UTSG, UTM");
 				
 				Flight.setupCampusChooser(".campusChooser");
+				
+				// hide the server errors once fields have changed
+				$("#date, #from, #to").change(function() {
+					$(".error").hide();
+				});
 				
 				$("#date").datepicker({
 					minDate: "+1D",
@@ -161,5 +166,13 @@ foreach (array("from", "to", "date", "time") as $k) {
 				echo form_close();
 			?>
 		</div> <!-- end search panel -->
+		
+		<footer>
+			<?php
+				// $contents = "<span class='ui-icon ui-icon-pencil'></span>";
+				$contents = ".";
+				echo anchor("airuoft/reset", $contents, array("title" => "reset"));
+			?>
+		</footer>
 	</body>
 </html>

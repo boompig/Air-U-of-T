@@ -39,3 +39,8 @@ input[type=text].invalid, select.invalid {
 input[type=text].valid, select.valid {
 	box-shadow: 0 0 0.4em green, 0 0 0.3em green;
 }
+
+footer {
+	text-align: center;
+	margin: 0 auto;
+}

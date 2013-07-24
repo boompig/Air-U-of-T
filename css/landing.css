@@ -61,3 +61,16 @@ label {
 	margin-bottom: 5px;
 	margin-left: 6px;
 }
+
+footer {
+	margin-top: 10%;
+}
+
+foooter a, .ui-icon {
+	margin: 0 auto;
+}
+
+footer a {
+	color: black;
+	text-decoration: none;
+}
