@@ -28,6 +28,10 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 		<!-- Google-hosted JQuery UI -->
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		
+		<!-- JQuery Form Validator -->
+		<script src="http://jquery.bassistance.de/validate/jquery.validate.js"></script>
+		<script src="http://jquery.bassistance.de/validate/additional-methods.js"></script>
+		
 		<!-- JQuery UI theme -->
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" />
 		
@@ -35,10 +39,11 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/style.css" />
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/navbar.css" />
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/error_box.css" />
-		<link rel="stylesheet" href="<?=base_url(); ?>/css/billing.css" />
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/passenger_info.css" />
 		
 		<!-- custom scripts -->
 		<script src="<?=base_url(); ?>/js/utils.js"></script>
+		<script src="<?=base_url(); ?>/js/form_validate.js"></script>
 		
 		<script>
 			/**
@@ -48,10 +53,11 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 				"use strict";
 				
 				var randDate = Date.randomFutureDate();
-				var randMonth = randDate.getMonth() + 1;
+				var randMonth = String(randDate.getMonth() + 1).pad(2, "0");
+				var randYear = String(randDate.getFullYear() - 2000).pad(2, "0");
 				
-				$("#expMonth").val(String(randMonth).pad(2, "0"));
-				$("#expYear").val(randDate.getFullYear() - 2000);
+				$("#expMonth").find("option[value={0}]".format(randMonth)).prop("selected", true);
+				$("#expYear").find("option[value={0}]".format(randYear)).prop("selected", true);
 				
 				$("#ccNum").val(Utils.genRandomCC());
 				
@@ -60,70 +66,81 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 				$("#lName").val(name[1]);
 			}
 		
-			/**
-			 * Return True iff the month and year are valid.
-			 * Invalid situations:
-			 * 	1. Month is invalid #
-			 * 	2. Credit card has expired
-			 * 
-			 * This function shows an error message if there is an error
-			 * Will not show the error if it looks like input is only partial
-			 */
-			function checkDate() {
-				var month = $("#expMonth").val();
-				var year = $("#expYear").val();
-				
-				$(".errorBox").hide();
-				
-				if (isNaN(month) || month.length == 0 || month < 1 || month > 12 || isNaN(year) || year.length == 0) {
-					return false;
-				} else {
-					// recall that JS numbers months from 0-11, so the first day of the month of expiry is (year, month - 1, 1)
-					// however, we want the first day of the month *after* expiry, = (year, (month - 1) + 1, 1)
-					var expiryDate = new Date("20" + String(year), Number(month), 1);
-					var now = new Date();
-					
-					// console.log(expiryDate);
-					// console.log(now);
-					// console.log("valid date? " + now < expiryDate);
-					
-					if (now >= expiryDate) {
-						$("#formError").show();
-					}
-					
-					return now < expiryDate;
-				}
-			}
-		
 			$(function() {
-				$("button, input[type=submit]").button();
+				"use strict";
 				
-				$(".ccExp, #ccNum").attr("type", "number");
+				$(".ccExp").find("option[value='']").attr("disabled", "disabled");
 				
-				$("#myForm").submit(function () {
-					$("#ccExp").val(String($("#expMonth").val()) + String($("#expYear").val()));
-					
-					// return checkDate();
+				$("select, input[type=text]").not("[name=expYear]").each(function() {
+					var name = $(this).attr("name");
+					var d = $("<div class='invalid' generated='true'></div>").attr("for", name);
+					$(this).before(d);
 				});
 				
-				$("#expYear").blur(function() {
-					checkDate();
+				$.validator.messages["required"] = "This field is required";
+				
+				$.validator.setDefaults({
+					"errorClass" : "invalid",
+					"errorElement" : "div",
+					"validClass" : "valid",
+					"success" : "valid"
 				});
 				
-				$("#expMonth, #expYear").change(function() {
-					$("#ccExp").val(String($("#expMonth").val()) + String($("#expYear").val()));
-					console.log($("#ccExp").val());
+				// custom validator functions
+				$.validator.addMethod ("validCreditCardNumber", validCreditCardNumber, "Credit card number should be 16 digits without spaces");
+				$.validator.addMethod ("checkCCExpMonth", checkCCExpMonth, "You must select a valid month");
+				$.validator.addMethod ("checkCCExpYear", checkCCExpYear, "You must select a valid year");
+				$.validator.addMethod ("checkFutureExpiryDate", checkFutureExpiryDate, "Whoops! Your credit card has expired");
+				
+				// hide the server errors once fields have changed
+				$("#ccNum, #fName, #lName", "#expMonth", "#expYear").change(function() {
+					$(".error").hide();
 				});
 				
-				$("#expYear").change(function() {
-					checkDate();
+				$.validator.addClassRules ("ccExp", {
+					"checkFutureExpiryDate" : true
 				});
 				
-				$("#expMonth").keyup(function() {
-					if ($(this).val().length == 2) {
-						$("#expYear").focus();
+				$("form").validate({
+					"groups" : {
+						"expDate" : "expMonth expYear"
+					},
+					"rules" : {
+						"ccNum" : {
+							"required" : true,
+							"validCreditCardNumber" : true
+						},
+						"expMonth" : {
+							"required" : true,
+							"checkCCExpMonth" : true
+						},
+						"expYear" : {
+							"required" : true,
+							"checkCCExpYear" : true
+						},
+						"fName" : {
+							"required" : true
+						}, 
+						"lName" : {
+							"required" : true
+						}
+					},
+					"errorPlacement": function (error, elem) {
+						if (elem.hasClass("ccExp")) {
+							error.insertBefore("#expMonth");
+						} else {
+							error.insertBefore(elem);
+						}
+					},
+					"success" : function (label) {
+						var year = $("#expYear").val();
+						var month = $("#expMonth").val();
+						$("#ccExp").val(String(month) + String(year));
 					}
 				});
+				
+				
+				$("button, input[type=submit]").button();
 				
 				$("#autofill").click(function() {
 					junkFill();
@@ -139,8 +156,8 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 		
 		<div id="container">
 			<?=form_open("airuoft/confirmation", array("id" => "myForm")); ?>
-				
-				<fieldset class="userInput" id="nameContainer">
+			
+				<div id="fNameContainer" class="userInput">
 					<?php
 						echo form_label("First Name");
 						$arr = HTML_Utils::get_input_array("fName");
@@ -148,7 +165,10 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 						$arr['value'] = $_SESSION['fName'];
 						$arr['class'] = "name";
 						echo form_input($arr);
-						
+					?>
+				</div>
+				<div id="lNameContainer" class="userInput">
+					<?php
 						echo form_label("Last Name");
 						$arr = HTML_Utils::get_input_array("lName");
 						$arr['required'] = 'required';
@@ -156,48 +176,86 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 						$arr['class'] = "name";
 						echo form_input($arr);
 					?>
-				</fieldset> <!-- end nameContainer -->
-				<fieldset class="userInput" id="ccContainer">
-					<legend>Credit Card Info</legend>
+				</div>
+				<div id="ccContainer" class="userInput">
 					<?php
 						echo form_label("Credit Card Number");
 						$arr = HTML_Utils::get_input_array("ccNum");
 						$arr['required'] = 'required';
 						$arr['value'] = $_SESSION['ccNum'];
-						// $arr['pattern'] = "\d{16}";
 						$arr['size'] = 16;
 						$arr['maxlength'] = 16;
-						$arr['oninvalid'] = "setCustomValidity('Credit card number must be 16 digits long with no dashes or spaces')";
+						$arr['placeholder'] = "16 digits, no spaces";
 						echo form_input($arr);
-						
+					?>
+				</div>
+				<div id="ccExpDateContainer" class="userInput">
+					<?php
 						echo form_label("Expiry Date");
-						$arr = HTML_Utils::get_input_array("expMonth");
-						$arr['required'] = 'required';
-						$arr['value'] = $_SESSION['expMonth'];
-						$arr['size'] = 2;
-						$arr['maxlength'] = 2;
-						$arr['min'] = 1;
-						$arr['max'] = 12;
-						$arr['pattern'] = "\d{2}";
-						$arr['class'] = 'ccExp';
-						$arr['placeholder'] = "mm";
-						echo form_input($arr);
 						
-						echo "<span>/</span>";
+						$monthOptions = array();
+						$monthOptions[''] = "MM";
 						
-						$arr = HTML_Utils::get_input_array("expYear");
-						$arr['required'] = 'required';
-						$arr['value'] = $_SESSION['expYear'];
-						$arr['size'] = 2;
-						$arr['maxlength'] = 2;
-						$arr['pattern'] = "\d{2}";
-						$arr['class'] = 'ccExp';
-						$arr['placeholder'] = "yy";
-						echo form_input($arr);
+						foreach (range (1, 12) as $m) {
+							if ($m < 10) {
+								$padM = "0" . ((string) $m);
+							} else {
+								$padM = (string) $m;
+							}
+							
+							$monthOptions[$padM] = $padM;
+						}
+						
+						$data = HTML_Utils::get_dropdown_options (array ("id" => "expMonth", "class" => "ccExp"));
+						echo form_dropdown("expMonth", $monthOptions, $_SESSION['expMonth'], $data);
+						
+						// $arr = HTML_Utils::get_input_array("expMonth");
+						// $arr['required'] = 'required';
+						// $arr['value'] = $_SESSION['expMonth'];
+						// $arr['size'] = 2;
+						// $arr['maxlength'] = 2;
+						// $arr['min'] = 1;
+						// $arr['max'] = 12;
+						// $arr['pattern'] = "\d{2}";
+						// $arr['class'] = 'ccExp';
+						// $arr['placeholder'] = "mm";
+						// echo form_input($arr);
+						
+						echo "<span>&nbsp;/&nbsp;</span>";
+						
+						$yearOptions = array();
+						// 8 years into the future
+						$yearOptions[''] = "YY";
+						$currentYear = date("Y") - 2000;
+						
+						foreach(range ($currentYear, $currentYear + 8) as $y) {
+							
+							if ($y < 10) {
+								$padY = "0" . ((string) $y);
+							} else {
+								$padY = (string) $y;
+							}
+							
+							$yearOptions[$padY] = $padY;
+						}
+						
+						$data = HTML_Utils::get_dropdown_options (array ("id" => "expYear", "class" => "ccExp"));
+						echo form_dropdown("expYear", $yearOptions, $_SESSION['expYear'], $data);
+						
+						
+						// $arr = HTML_Utils::get_input_array("expYear");
+						// $arr['required'] = 'required';
+						// $arr['value'] = $_SESSION['expYear'];
+						// $arr['size'] = 2;
+						// $arr['maxlength'] = 2;
+						// $arr['pattern'] = "\d{2}";
+						// $arr['class'] = 'ccExp';
+						// $arr['placeholder'] = "yy";
+						// echo form_input($arr);
 						
 						echo "<input type='hidden' name='ccExp' id='ccExp' value='" . $_SESSION['ccExp'] . "' />";
 					?>
-				</fieldset> <!-- end ccContainer -->
+				</div>
 				<?php
 					echo form_submit("submit", "Next");
 				?>

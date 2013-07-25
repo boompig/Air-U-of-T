@@ -37,7 +37,7 @@ class HTML_Utils extends CI_Model {
 	 * @param $arr The associative array
 	 */
 	function get_dropdown_options($arr) {
-		$arr['required'] = 'required';
+		// $arr['required'] = 'required';
 		return HTML_Utils::attr_array_to_str($arr);
 	}
 	

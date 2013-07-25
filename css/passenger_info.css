@@ -3,30 +3,32 @@
  */
 
 #container {
-	width: 750px;
-	margin: 0 auto;
+	width: 800px;
+	margin: 3% auto 0 auto;
 	text-align: center;
 }
 
 input[type=submit] {
 	/*display: block;*/
-	margin: 0 auto;
+	
+	margin: 4% auto;
 	text-align: center;
 }
 
-fieldset legend {
-	font-size: 0.8em;
+
+
+#fNameContainer, #ccContainer {
+	margin-right: 3%;
+}
+
+#ccContainer, #ccExpDateContainer {
+	margin-top: 4%;
 }
 
 .userInput {
-	padding: 20px 10px;
+	width: 47%;
+	display: inline-block;
 	text-align: left;
-	border: 1px solid #DDDDDD;
-}
-
-#nameContainer {
-	margin-bottom: 20px;
-	margin-top: 10px;
 }
 
 input[type=text], input[type=number], input[type=date] {
@@ -38,7 +40,12 @@ input[type=text]:valid, input[type=number]:valid, input[type=date]:valid {
 }
 
 .userInput label {
-	margin-right: 10px;
+	/*margin-right: 10px;*/
+	/*padding-bottom: 15px;*/
+	/*text-align: left;*/
+	position: relative;
+	bottom: 6px;
+	left: 6px;
 }
 
 .name {
@@ -47,10 +54,6 @@ input[type=text]:valid, input[type=number]:valid, input[type=date]:valid {
 
 #fName, #ccNum {
 	margin-right: 20px;
-}
-
-#ccContainer {
-	margin-bottom: 30px;
 }
 
 .ccExp {
@@ -63,4 +66,12 @@ input[type=text]:valid, input[type=number]:valid, input[type=date]:valid {
 
 #expYear {
 	margin-left: 5px;
+}
+
+div.invalid[for=expYear] {
+	/*display: inline;*/
+}
+
+div.invalid {
+	margin-bottom: 8px;
 }

@@ -14,6 +14,8 @@ function validDateFormat (val, elem) {
  * Assume dateStr has correct format. Return true iff it's a valid date.
  */
 function validDate (val, elem) {
+	"use strict";
+	
 	var match = val.match(/^(\d{4})\-(\d{2})\-(\d{2})$/);
 	
 	if ((! match) || match.length < 4) {
@@ -28,10 +30,49 @@ function validDate (val, elem) {
 }
 
 /**
+ * Return true iff val contains valid credit card number.
+ */
+function validCreditCardNumber (val, elem) {
+	return val.match(/^\d{16}$/);
+}
+
+function checkCCExpMonth (val, elem) {
+	var pattern = /^\d{2}$/;
+	return val.match(pattern) && val > 0 && val <= 12;
+}
+
+/**
+ * This is cheating function
+ */
+function checkCCExpYear (val, elem) {
+	var pattern = /^\d{2}$/;
+	return val.match(pattern);
+}
+
+function checkFutureExpiryDate (val, elem, options) {
+	"use strict";
+	
+	var year = "20" + String($("#expYear").val());
+	var month = $("#expMonth").val();
+	
+	// if year or month is not set, return true
+	// this may seem counter-intuitive, but I allow other methods to catch this
+	
+	if (year.length === 0 || month.length === 0) {
+		return true;
+	} else {
+		console.log(year + "-" + month + "-00");
+		return checkFutureDate(year + "-" + month + "-00");
+	}
+}
+
+/**
  * Return true iff date is in the future.
  * In the future means at least tomorrow.
  */
 function checkFutureDate (val, elem) {
+	"use strict";
+	
 	var match = val.match(/^(\d{4})\-(\d{2})\-(\d{2})$/);
 
 	if ((! match) || match.length < 4) {
