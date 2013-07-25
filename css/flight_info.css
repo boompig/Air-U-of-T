@@ -60,7 +60,7 @@ table {
 	text-align: center;
 }
 
-tr:hover {
+tbody tr:hover {
 	background-color: #DFEFFC;
 }
 
