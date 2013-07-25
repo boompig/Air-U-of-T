@@ -35,7 +35,8 @@
 			$contents .= HTML_Utils::span($v, array("class" => "navTitle"));
 			
 			if ($i <= $thisIndex) {
-				echo anchor("airuoft/" . $k, $contents, array());
+				// the /1 passes ID=1 (which is the same as arg=true)
+				echo anchor("airuoft/" . $k . "/1", $contents, array());
 			} else {
 				echo $contents;
 			}

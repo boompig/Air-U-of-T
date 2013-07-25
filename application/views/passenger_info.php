@@ -143,6 +143,15 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 				
 				<?=HTML_Utils::pentestComment() ?>addValidator();
 				
+				// slight hack here to make sure that makes sure ccExp actually generated
+				<?php
+					if (isset($_SESSION['pentest']) && $_SESSION['pentest']) {
+						echo "$('.ccExp').change(function() {
+							$('#ccExp').val($('#expMonth').val() + $('#expYear').val());
+						});";
+					}
+				?>
+				
 				$("button, input[type=submit]").button();
 				
 				$("#autofill").click(function() {

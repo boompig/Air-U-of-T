@@ -35,19 +35,24 @@ $this->load->model("html_utils");
 		
 		<script>
 			var selected = false;
+			
+			function seatSelected(seatIndex) {
+				$("#seatNum").val(seatIndex);
+				
+				if (! selected) {
+					$("#noSeat").hide();
+					$("#seatContainer").show();
+					$("input[type=submit]").button({"disabled": false});
+					selected = true;
+				}
+			};
 		
 			$(function() {
 				$("#seatButtons").selectable({
 					"selected" : function (e, elem) {
 						var seatIndex = $(".seatButton").index(elem.selected);
-						$("#seatNum").val(seatIndex);
 						
-						if (! selected) {
-							$("#noSeat").hide();
-							$("#seatContainer").show();
-							$("input[type=submit]").button({"disabled": false});
-							selected = true;
-						}
+						seatSelected(seatIndex);
 					}
 				});
 				
@@ -55,9 +60,10 @@ $this->load->model("html_utils");
 				
 				// if a seat has previously been chosen, then set that seat
 				<?php
-					if (key_exists ('seatNum', $_SESSION)) {
+					if (isset ($_SESSION['seatNum'])) {
 						$i = $_SESSION['seatNum'];
-						echo "$('#seatButtons .seat$i').trigger('selected');";
+						echo "$('#seatButtons .seat$i').addClass('ui-selected');";
+						echo "seatSelected($i);";
 					}
 				?>
 			});

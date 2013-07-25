@@ -112,6 +112,13 @@ class AirUofT extends CI_Controller {
 	 */
 	function validExpiration($expDateStr) {
 		date_default_timezone_set("UTC");
+		
+		if (strlen($expDateStr) !== 4) {
+			// do not display the hacker message if a field is not set
+			$this->form_validation->set_message("validExpiration", "Credit card expiration date has improper format " . strlen($expDateStr));
+			return false;
+		}
+		
 		$expDate = DateTime::createFromFormat("dmy", "01" . $expDateStr);
 		if ($expDate === false) {
 			$this->form_validation->set_message("validExpiration", $this->getHackerMessage("CC expiration date"));
@@ -123,8 +130,6 @@ class AirUofT extends CI_Controller {
 		$expDate->add(new DateInterval("P1M"));
 		
 		$result = $today < $expDate;
-		// $this->logger->log($today, "today");
-		// $this->logger->log($expDate, "expDate");
 		
 		if (! $result) {
 			$this->form_validation->set_message("validExpiration", "Whoops! It looks like your credit card has expired!");
@@ -184,39 +189,25 @@ class AirUofT extends CI_Controller {
 		}
 	}
 	
-	/**
-	 * The opposite of saveRequest - puts session variables into Request, to re-run validation.
-	 * This allows saving variables between states without sacrificing validative power.
-	 * ONLY PERFORM THIS ACTION IF REQUEST PARAM NOT SET
-	 */
-	function setRequest($vars) {
-		// make sure none of the parameters are set in the request
-		foreach ($vars as $k) {
-			if (isset($_REQUEST[$k])) {
-				$this->logger->log($k, "early return");
-				return;
-			}
-		}
-		
-		foreach ($vars as $k) {
-			if (isset($_SESSION[$k])) {
-				$_REQUEST[$k] = $_SESSION[$k];
-			}
-		}
-	}
-	
 	function logSession() {
 		$this->logger->log($_SESSION, "session");
-		// foreach ($_SESSION as $k => $v) {
-			// $this->logger->log($v, $k);
-		// }
 	}
 	
 	function logRequest() {
 		$this->logger->log($_REQUEST, "request");
-		// foreach ($_REQUEST as $k => $v) {
-			// $this->logger->log($v, $k);
-		// }
+	}
+	
+	/**
+	 * Add given view to visited
+	 * If TRUE, means view is successfully completed
+	 * If FALSE, means view has just been visited
+	 */
+	function addVisited($view, $status=false) {
+		if (! isset($_SESSION['visited'])) {
+			$_SESSION['visited'] = array();
+		}
+		
+		$_SESSION['visited'][$view] = $status;
 	}
 	
 	/**
@@ -240,30 +231,35 @@ class AirUofT extends CI_Controller {
 	 */
 	function searchFlights () {
 		$this->load->library("form_validation");
-		
 		$this->form_validation->set_rules("from", "Departure Campus", "required|callback_validCampus");
 		$this->form_validation->set_rules("to", "Destination Campus", "required|callback_validCampus");
 		$this->form_validation->set_rules("date", "Departure Date", "required|callback_validFlightDate");
 		$this->form_validation->set_error_delimiters("<div class='error'>", "</div>");
 		
 		$this->saveRequest(array("from", "to", "date"));
-		$this->setRequest(array("from", "to", "date"));
 		
-		$this->logRequest();
-		
-		if ($this->form_validation->run()) {
+		if (func_num_args() > 0) {
+			// unfortunately, there is no data integrity in date, from, to (because they are saved prior to validation)
+			// which means we have to re-validate them
+			$fromValid = isset($_SESSION["from"]) && $this->validCampus($_SESSION['from']);
+			$toValid = isset($_SESSION["to"]) && $this->validCampus($_SESSION['to']);
+			$dateValid = isset($_SESSION["date"]) && $this->validFlightDate($_SESSION['date']);
 			
+			$noValidate = func_get_arg(0) && $fromValid && $toValid && $dateValid;
+		} else {
+			$noValidate = false;
+		}
+		
+		if ($noValidate || $this->form_validation->run()) {
 			date_default_timezone_set("UTC");
-			$departureDate = DateTime::createFromFormat("Y-m-d", $_REQUEST['date']);
+			$departureDate = DateTime::createFromFormat("Y-m-d", $_SESSION['date']);
 			
 			$this->load->model("airuoft_model");
-			$data["times"] = $this->airuoft_model->get_available_flights($_REQUEST['from'], $_REQUEST['to'], date_format($departureDate, "Y-m-d"));
+			$data["times"] = $this->airuoft_model->get_available_flights($_SESSION['from'], $_SESSION['to'], date_format($departureDate, "Y-m-d"));
 			
 			// THIS IS VERY IMPORTANT:
 			// remember valid flightID's in the $_SESSION variable, so only valid times can be booked (i.e. those returned to the user)
 			$_SESSION["validFlights"] = array_keys($data["times"]);
-			
-			$this->logSession();
 			
 			$this->load->view("flight_info", $data);
 		} else {
@@ -291,10 +287,20 @@ class AirUofT extends CI_Controller {
 		$this->form_validation->set_rules("flightID", "Flight Time", "required|callback_validFlightID");
 		$this->form_validation->set_rules("time", "Flight Time", "required|callback_validFlightTime");
 		
-		$this->setRequest(array("flightID", "time"));
+		if (func_num_args() > 0) {
+			// this means we got here by navigation
+			// so now we validate $_SESSION instead of $_REQUEST
+			// however, we know that $_SESSION for these vars only set when they are valid
+			// so can just check if they are set
+			$flightValid = isset($_SESSION['flightID']) && isset($_SESSION['time']);
+			$this->logSession();
+			
+			$noValidate = func_get_arg(0) && $flightValid;
+		} else {
+			$noValidate = false;
+		}
 		
-		// adding session check allows for inter-view navigation
-		if ($this->form_validation->run()) {
+		if ($noValidate || $this->form_validation->run()) {
 			// only set these once they are verified
 			$this->saveRequest(array("time", "flightID"));
 			
@@ -311,16 +317,9 @@ class AirUofT extends CI_Controller {
 					unset($data["occupied"][$seat]);
 				}
 			}
-			
-			$this->logSession();
 			$this->load->view("seats", $data);
 		} else {
-			$this->logger->log("Failed validation on flights");
-			$this->logger->log(validation_errors(), "errors");
-			$this->logger->log($this->validFlightTime($_REQUEST["time"]), "valid flight time?");
-			$this->logger->log($this->validFlightID($_REQUEST["flightID"]), "valid flight ID?");
-			$this->logRequest();
-			$this->searchFlights();
+			$this->searchFlights(true);
 		}
 	}
 
@@ -331,20 +330,22 @@ class AirUofT extends CI_Controller {
 	 * 	'seatNum'	-	index of the seat
 	 */
 	function customerInfo () {
-		$this->setRequest(array("seatNum"));
-		
 		$this->load->library("form_validation");
 		$this->form_validation->set_rules("seatNum", "Seat Number", "required|callback_validSeat");
 		
-		if ($this->form_validation->run()) {
+		if (func_num_args() > 0) {
+			// means we got here by navigation
+			// again, setNum has integrity, in that it is only set in the session if it is valid
+			$noValidate = func_get_arg(0) && isset($_SESSION['seatNum']);
+		} else {
+			$noValidate = false;
+		}
+		
+		if ($noValidate || $this->form_validation->run()) {
 			$this->saveRequest(array("seatNum"));
-			$this->logSession();
 			$this->load->view("passenger_info");
 		} else {
-			$this->logger->log("Failed seat number validation");
-			$this->logger->log($this->validSeat($_REQUEST["seatNum"]), "valid seat num?");
-			$this->logger->log(validation_errors(), "errors");
-			$this->searchSeats();
+			$this->searchSeats(true);
 		}
 	}
 	
@@ -365,23 +366,24 @@ class AirUofT extends CI_Controller {
 		$this->form_validation->set_rules("fName", "First Name", "trim|required");
 		$this->form_validation->set_rules("lName", "Last Name", "trim|required");
 		$this->form_validation->set_rules("ccNum", "Credit Card Number", "trim|required|regex_match[/\d{16}/]");
+		$this->form_validation->set_rules("expMonth", "Credit Card Expiration Month", "required");
+		$this->form_validation->set_rules("expYear", "Credit Card Expiration Year", "required");
 		$this->form_validation->set_rules("ccExp", "Credit Card Expiration Date", "required|callback_validExpiration");
 		
 		$this->saveRequest(array("fName", "lName", "ccNum", "ccExp", "expMonth", "expYear"));
-		$this->setRequest(array("fName", "lName", "ccNum", "ccExp", "expMonth", "expYear"));
 		
+		// TODO to allow navigating here, have to check fucking everything >_<
 		if ($this->form_validation->run()) {
 			$_SESSION['lastView'] = 'confirmation';
 			
 			date_default_timezone_set("UTC");
 			$_SESSION["expDate"] = DateTime::createFromFormat("dmy", "01" . $_SESSION['ccExp']);
 			
-			$this->logSession();
 			$data = array("title" => "Confirmation");
 			$this->load->view("confirmation", $data);
 		} else {
-			$this->logSession();
-			$this->customerInfo();
+			// since this view takes no args, can just go back to it without validating anything
+			$this->customerInfo(true);
 		}
 	}
 	
