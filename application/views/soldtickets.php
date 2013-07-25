@@ -5,6 +5,9 @@
 		<title>Sold Tickets | Air U of T</title>
 		<meta charset="UTF-8" />
 		
+		<!-- favicon -->
+		<link rel="icon" type="image/x-icon" href="<?=base_url() ?>/images/airplane-med.png" />
+		
 		<!-- Google-hosted JQuery -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		
