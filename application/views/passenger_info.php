@@ -59,6 +59,9 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 				$("#expMonth").find("option[value={0}]".format(randMonth)).prop("selected", true);
 				$("#expYear").find("option[value={0}]".format(randYear)).prop("selected", true);
 				
+				// trigger change event on expiry year
+				$("#expYear").change();
+				
 				$("#ccNum").val(Utils.genRandomCC());
 				
 				var name = Utils.getRandomName().split(" ");
