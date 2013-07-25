@@ -114,6 +114,10 @@ class AirUofT_Model extends CI_Model {
 	 * Return true iff successful.
 	 */
 	function fill_flights() {
+		// TODO I think this needs to be have some kind of check for 'if exists'
+		// i.e. if there are already flights in the table, what is the expected behaviour???
+		// what it does right now is adds flights on top of existing guy
+		
 		$this->db->trans_start();
 		date_default_timezone_set("UTC");
 		$date = new DateTime(date("Y-m-d"));

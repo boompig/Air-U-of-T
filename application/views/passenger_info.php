@@ -65,42 +65,8 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 				$("#fName").val(name[0]);
 				$("#lName").val(name[1]);
 			}
-		
-			$(function() {
-				"use strict";
-				
-				$(".ccExp").find("option[value='']").attr("disabled", "disabled");
-				
-				$("select, input[type=text]").not("[name=expYear]").each(function() {
-					var name = $(this).attr("name");
-					var d = $("<div class='invalid' generated='true'></div>").attr("for", name);
-					$(this).before(d);
-				});
-				
-				$.validator.messages["required"] = "This field is required";
-				
-				$.validator.setDefaults({
-					"errorClass" : "invalid",
-					"errorElement" : "div",
-					"validClass" : "valid",
-					"success" : "valid"
-				});
-				
-				// custom validator functions
-				$.validator.addMethod ("validCreditCardNumber", validCreditCardNumber, "Credit card number should be 16 digits without spaces");
-				$.validator.addMethod ("checkCCExpMonth", checkCCExpMonth, "You must select a valid month");
-				$.validator.addMethod ("checkCCExpYear", checkCCExpYear, "You must select a valid year");
-				$.validator.addMethod ("checkFutureExpiryDate", checkFutureExpiryDate, "Whoops! Your credit card has expired");
-				
-				// hide the server errors once fields have changed
-				$("#ccNum, #fName, #lName", "#expMonth", "#expYear").change(function() {
-					$(".error").hide();
-				});
-				
-				$.validator.addClassRules ("ccExp", {
-					"checkFutureExpiryDate" : true
-				});
-				
+			
+			function addValidator () {
 				$("form").validate({
 					"groups" : {
 						"expDate" : "expMonth expYear"
@@ -138,7 +104,44 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 						$("#ccExp").val(String(month) + String(year));
 					}
 				});
+			}
+		
+			$(function() {
+				"use strict";
 				
+				$(".ccExp").find("option[value='']").attr("disabled", "disabled");
+				
+				$("select, input[type=text]").not("[name=expYear]").each(function() {
+					var name = $(this).attr("name");
+					var d = $("<div class='invalid' generated='true'></div>").attr("for", name);
+					$(this).before(d);
+				});
+				
+				$.validator.messages["required"] = "This field is required";
+				
+				$.validator.setDefaults({
+					"errorClass" : "invalid",
+					"errorElement" : "div",
+					"validClass" : "valid",
+					"success" : "valid"
+				});
+				
+				// custom validator functions
+				$.validator.addMethod ("validCreditCardNumber", validCreditCardNumber, "Credit card number should be 16 digits without spaces");
+				$.validator.addMethod ("checkCCExpMonth", checkCCExpMonth, "You must select a valid month");
+				$.validator.addMethod ("checkCCExpYear", checkCCExpYear, "You must select a valid year");
+				$.validator.addMethod ("checkFutureExpiryDate", checkFutureExpiryDate, "Whoops! Your credit card has expired");
+				
+				// hide the server errors once fields have changed
+				$("#ccNum, #fName, #lName", "#expMonth", "#expYear").change(function() {
+					$(".error").hide();
+				});
+				
+				$.validator.addClassRules ("ccExp", {
+					"checkFutureExpiryDate" : true
+				});
+				
+				<?=HTML_Utils::pentestComment() ?>addValidator();
 				
 				$("button, input[type=submit]").button();
 				
@@ -155,7 +158,7 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 		<?php $this->load->view("navbar") ?>
 		
 		<div id="container">
-			<?=form_open("airuoft/confirmation", array("id" => "myForm")); ?>
+			<?=HTML_Utils::form_open("airuoft/confirmation", array("id" => "myForm")); ?>
 			
 				<div id="fNameContainer" class="userInput">
 					<?php
