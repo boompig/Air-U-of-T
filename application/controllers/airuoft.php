@@ -218,7 +218,7 @@ class AirUofT extends CI_Controller {
 	}
 	
 	/**
-	 * This function is called by landing.php (or alternatively flightinfo.php) to search for flights.
+	 * This function is called by landing.php (or alternatively flight_info.php) to search for flights.
 	 * Load the flights into an array 
 	 *  
 	 * The $_REQUEST parameter 'date' should be in the format 'yyyy-mm-dd'
@@ -256,14 +256,14 @@ class AirUofT extends CI_Controller {
 			
 			$this->logSession();
 			
-			$this->load->view("flightinfo", $data);
+			$this->load->view("flight_info", $data);
 		} else {
 			$this->index();
 		}
 	}
 	
 	/**
-	 * This function is called by flightinfo.php to search for seats
+	 * This function is called by flight_info.php to search for seats
 	 * Load the seats into an array
 	 * 
 	 * Sets the following session variables:

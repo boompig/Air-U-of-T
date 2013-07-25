@@ -33,7 +33,15 @@ div {
 
 .inputPanel {
 	float: left;
+}
+
+.inputPanel {
 	padding-right: 35px;
+}
+
+img.inputPanel {
+	height: 1.5em;
+	width: 1.5em;
 }
 
 #date, .ui-icon-calendar {
@@ -60,6 +68,7 @@ input[type=text] {
 	padding-left: 3px;
 	padding-top: 2px;
 	padding-bottom: 2px;
+	padding-right: 5px;
 }
 
 .error {

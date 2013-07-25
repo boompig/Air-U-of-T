@@ -87,21 +87,21 @@ $logger = FirePHP::getInstance(true);
 				
 				<div id="fromPanel" class="inputPanel">
 					<?php
-						echo form_label("From");
 						echo form_dropdown("from", $campus_options, $_SESSION['from'], HTML_Utils::get_dropdown_options(array("id"=>"from", "class"=>"campusChooser")));
 					?>
 				</div>
 				
+				<img src="<?=base_url() ?>/images/arrow_alt_right.png" class="inputPanel" />
+				<!-- <span class="ui-icon ui-icon-circle-arrow-e inputPanel"></span> -->
+				
 				<div id="toPanel" class="inputPanel">
 					<?php
-						echo form_label("To");
 						echo form_dropdown("to", $campus_options, $_SESSION['to'], HTML_Utils::get_dropdown_options(array("id"=>"to", "class"=>"campusChooser")));
 					?>
 				</div>
 				
 				<div id="datePanel" class="inputPanel">
 					<?php
-						echo form_label("Date");
 						$arr = HTML_Utils::get_input_array("date");
 						$arr["value"] = $_SESSION["date"];
 						$arr["size"] = 10;

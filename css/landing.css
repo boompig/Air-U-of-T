@@ -32,6 +32,10 @@ div {
 	margin-left: 3%;
 }
 
+#date {
+	margin-right: 5px;
+}
+
 #date, .ui-icon-calendar {
 	display: inline-block;
 }
