@@ -52,6 +52,27 @@ foreach (array("from", "to", "date", "time") as $k) {
 		<script src="<?=base_url(); ?>/js/flight.js"></script>
 		
 		<script>
+			function addValidator () {
+				$("form").validate({
+					"rules" : {
+						"date" : {
+							"required" : true,
+							"validDateFormat" : true,
+							"validDate" : true,
+							"checkFutureDate" : true
+						},
+						"from" : {
+							"required" : true,
+							"validCampus" : true,
+						},
+						"to" : {
+							"required" : true,
+							"validCampus" : true
+						}
+					}
+				});
+			}
+		
 			$(function() {
 				"use strict";
 				
@@ -79,7 +100,7 @@ foreach (array("from", "to", "date", "time") as $k) {
 				Flight.setupCampusChooser(".campusChooser");
 				
 				// hide the server errors once fields have changed
-				$("#date, #from, #to").change(function() {
+				$("#date, #from, #to").change (function() {
 					$(".error").hide();
 				});
 				
@@ -89,25 +110,7 @@ foreach (array("from", "to", "date", "time") as $k) {
 					dateFormat: "yy-mm-dd" // this line actually means yyyy-mm-dd
 				});
 				
-				$("form").validate({
-					"rules" : {
-						"date" : {
-							"required" : true,
-							"validDateFormat" : true,
-							"validDate" : true,
-							"checkFutureDate" : true
-						},
-						"from" : {
-							"required" : true,
-							"validCampus" : true,
-						},
-						"to" : {
-							"required" : true,
-							"validCampus" : true
-						}
-					}
-				});
-				
+				<?=HTML_Utils::pentestComment() ?>addValidator();
 				
 				$("input[type=submit], button").button();
 			});
@@ -124,7 +127,7 @@ foreach (array("from", "to", "date", "time") as $k) {
 		<div id="searchPanel">
 			<?php
 				// echo validation_errors();
-				echo form_open('airuoft/searchFlights');
+				echo HTML_Utils::form_open('airuoft/searchFlights');
 			?>
 			<div id="fromPanel" class="inputPanel">
 				<?php

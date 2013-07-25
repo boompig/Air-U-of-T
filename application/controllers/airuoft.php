@@ -24,6 +24,11 @@ class AirUofT extends CI_Controller {
 	private $seats;
 	
 	/**
+	 * Whether pentesting is turned on or not.
+	 */
+	private $penTest;
+	
+	/**
 	 * Typical constructor. Starts the session.
 	 */
 	function __construct() {
@@ -39,6 +44,10 @@ class AirUofT extends CI_Controller {
 		
 		// set this globally
 		date_default_timezone_set("UTC");
+		
+		// whether to keep or not keep pentesting
+		$this->pentest = true;
+		$_SESSION['pentest'] = $this->pentest;
 	}
 	
 	function getHackerMessage($field) {
@@ -411,7 +420,7 @@ class AirUofT extends CI_Controller {
 	 * Unset everything from $_SESSION variable. Start over.
 	 */
 	function reset () {
-		$_SESSION = array();
+		$_SESSION = array("pentest" => $this->pentest);
 		$this->index();
 	}
 }

@@ -5,6 +5,44 @@
  */
 class HTML_Utils extends CI_Model {
 	/**
+	 * Return a JS comment-string if pentesting is turned on, else return empty string.
+	 */
+	function pentestComment () {
+		if (isset($_SESSION['pentest']) && $_SESSION['pentest']) {
+			return "//";
+		} else {
+			return "console.log('" . $_SESSION['pentest'] . "');";
+		}	
+	}
+	
+	/**
+	 * Replicates form_open from CI form-helper, but also passed 
+	 */
+	function form_open($location) {
+		// first attribute is location
+		// second is a list of attributes
+		// third is a list of hidden fields
+		
+		if (func_num_args() < 3) {
+			$hidden = array();
+		} else {
+			$hidden = func_get_arg(2);
+		}
+		
+		if (func_num_args() < 2) {
+			$attrs = array();
+		} else {
+			$attrs = func_get_arg(1);
+		}
+		
+		if (isset($_SESSION['pentest']) && $_SESSION['pentest']) {
+			$attrs['novalidate'] = 'novalidate';
+		}
+		
+		return form_open($location, $attrs, $hidden);
+	}
+	
+	/**
 	 * Return an associative array for everything that's needed for a text input with the given name.
 	 * @param input_name The name of the input field.
 	 */

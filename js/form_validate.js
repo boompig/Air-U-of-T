@@ -52,15 +52,18 @@ function checkCCExpYear (val, elem) {
 function checkFutureExpiryDate (val, elem, options) {
 	"use strict";
 	
-	var year = "20" + String($("#expYear").val());
+	var year = $("#expYear").val();
 	var month = $("#expMonth").val();
 	
 	// if year or month is not set, return true
 	// this may seem counter-intuitive, but I allow other methods to catch this
 	
-	if (year.length === 0 || month.length === 0) {
+	if ((! year) || (! month) || isNaN(month) || isNaN(year)) {
 		return true;
 	} else {
+		year = "20" + String(year);
+		month = String(Number(month) + 1).pad(2, "0");
+		
 		console.log(year + "-" + month + "-00");
 		return checkFutureDate(year + "-" + month + "-00");
 	}

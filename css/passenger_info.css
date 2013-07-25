@@ -15,8 +15,6 @@ input[type=submit] {
 	text-align: center;
 }
 
-
-
 #fNameContainer, #ccContainer {
 	margin-right: 3%;
 }
@@ -46,6 +44,12 @@ input[type=text]:valid, input[type=number]:valid, input[type=date]:valid {
 	position: relative;
 	bottom: 6px;
 	left: 6px;
+}
+
+.error, div.invalid {
+	font-size: .8em;
+	margin-bottom: 5px;
+	margin-left: 6px;
 }
 
 .name {
