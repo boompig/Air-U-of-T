@@ -75,7 +75,6 @@ class AirUofT extends CI_Controller {
 	 * 	3. It is no more than 2 weeks in the future
 	 */
 	function validFlightDate($flightDateStr) {
-		date_default_timezone_set("UTC");
 		$flightDate = DateTime::createFromFormat("Y-m-d", $flightDateStr);
 		
 		if ($flightDate === false) {
@@ -83,7 +82,6 @@ class AirUofT extends CI_Controller {
 			return false;
 		}
 		
-		date_default_timezone_set("UTC");
 		$today = new DateTime();
 		$today->setTime(0, 0, 0);
 		$flightDate->setTime(0, 0, 0);
@@ -111,8 +109,6 @@ class AirUofT extends CI_Controller {
 	 * 	2. It is in the future
 	 */
 	function validExpiration($expDateStr) {
-		date_default_timezone_set("UTC");
-		
 		if (strlen($expDateStr) !== 4) {
 			// do not display the hacker message if a field is not set
 			$this->form_validation->set_message("validExpiration", "Credit card expiration date has improper format " . strlen($expDateStr));
@@ -251,14 +247,13 @@ class AirUofT extends CI_Controller {
 		}
 		
 		if ($noValidate || $this->form_validation->run()) {
-			date_default_timezone_set("UTC");
 			$departureDate = DateTime::createFromFormat("Y-m-d", $_SESSION['date']);
 			
 			$this->load->model("airuoft_model");
 			$data["times"] = $this->airuoft_model->get_available_flights($_SESSION['from'], $_SESSION['to'], date_format($departureDate, "Y-m-d"));
 			
 			// THIS IS VERY IMPORTANT:
-			// remember valid flightID's in the $_SESSION variable, so only valid times can be booked (i.e. those returned to the user)
+			// remember valid flightIDs in the $_SESSION variable, so only valid times can be booked (i.e. those returned to the user)
 			$_SESSION["validFlights"] = array_keys($data["times"]);
 			
 			$this->load->view("flight_info", $data);
@@ -372,11 +367,27 @@ class AirUofT extends CI_Controller {
 		
 		$this->saveRequest(array("fName", "lName", "ccNum", "ccExp", "expMonth", "expYear"));
 		
-		// TODO to allow navigating here, have to check fucking everything >_<
-		if ($this->form_validation->run()) {
+		// first, make sure the rest is filled in
+		if (! (isset($_SESSION['to']) && isset($_SESSION['from']) && isset($_SESSION['date']))) {
+			$this->index();
+		} else if (! (isset($_SESSION['time']) && isset($_SESSION['flightID']))){
+			$this->searchFlights(true);
+		} else if (! isset($_SESSION['seatNum'])) {
+			$this->searchSeats(true);
+		}
+		
+		if (func_num_args() > 0) {
+			$validName = isset($_SESSION['fName']) && isset($_SESSION['lName']);
+			$validCC = isset($_SESSION['ccNum']) && preg_match("/\d{16}/", $_SESSION['ccNum']);
+			$validExp = isset($_SESSION['expMonth']) && isset($_SESSION['expYear']) && isset($_SESSION['ccExp']) && $_SESSION['expMonth'] . $_SESSION['expYear'] === $_SESSION['ccExp'] && $this->validExpiration($_SESSION['ccExp']);
+			$noValidate = $validName && $validCC && $validExp && func_get_arg(0);
+		} else {
+			$noValidate = false;
+		}
+		
+		if ($noValidate || $this->form_validation->run()) {
 			$_SESSION['lastView'] = 'confirmation';
 			
-			date_default_timezone_set("UTC");
 			$_SESSION["expDate"] = DateTime::createFromFormat("dmy", "01" . $_SESSION['ccExp']);
 			
 			$data = array("title" => "Confirmation");
@@ -403,14 +414,24 @@ class AirUofT extends CI_Controller {
 			
 			$this->logger->log($result, "result");
 			
-			if ($result) {
+			if ($result === 0) {
 				$this->logger->log("It's Good!", "Ticket Result");
 				$_SESSION['lastView'] = 'summary';
 				
 				$this->load->view("confirmation", $data);
-			} else {
-				// TODO have this show up on another page
+			} else if ($result === 1) {
 				$this->logger->log("Failed =.=", "Ticket Result");
+				
+				$data = array("errMsg" => "Sorry, someone already reserved the same seat on the same flight. Try selecting a different seat.");
+				
+				$this->load->view("error", $data);
+			} else if ($result === 2) {
+				$this->logger->log("Failed =.=", "Ticket Result");
+				
+				// TODO give more descriptive feedback here
+				$data = array("errMsg" => "Unknown DB error");
+				
+				$this->load->view("error", $data);
 			}
 		} else {
 			// loading confirmation view, but as summary

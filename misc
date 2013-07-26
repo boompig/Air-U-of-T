@@ -6,3 +6,7 @@ ssh -L 3306:bungle07.cs.toronto.edu:3306 -N g1dbkats@cdf.toronto.edu
 cat /var/log/apache2/error_log
 ## on Linux:
 cat /var/log/apache2/error.log
+
+# sql to get all duplicate tickets
+SELECT * FROM ticket A WHERE EXISTS (SELECT * FROM ticket B WHERE A.id<>B.id AND A.flight_id=B.flight_id AND A.seat=B.seat);
+

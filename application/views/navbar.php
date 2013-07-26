@@ -34,7 +34,7 @@
 			$contents = HTML_Utils::span($i + 1,  array("class" => "navIndex"));
 			$contents .= HTML_Utils::span($v, array("class" => "navTitle"));
 			
-			if ($i <= $thisIndex) {
+			if ($i <= $thisIndex && $title !== "buyTicket") {
 				// the /1 passes ID=1 (which is the same as arg=true)
 				echo anchor("airuoft/" . $k . "/1", $contents, array());
 			} else {

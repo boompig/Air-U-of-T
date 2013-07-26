@@ -1,0 +1,15 @@
+#title {
+	margin-top: 2%;
+	margin-bottom: 3%;
+}
+
+#content {
+	margin: 0 auto;
+	text-align: center;
+}
+
+.errorBox {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 3%;
+}

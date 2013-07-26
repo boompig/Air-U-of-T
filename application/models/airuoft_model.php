@@ -163,7 +163,9 @@ class AirUofT_Model extends CI_Model {
 	/**
 	 * Create a brand-new ticket from the passed data.
 	 * Also update flight table's available column.
-	 * Return true iff successfully inserted item.
+	 * Return 0 exit status on success
+	 * Return 1 if the ticket already exists
+	 * Return 2 if there is another error
 	 */
 	function create_ticket ($fName, $lName, $ccNum, $ccExpDate, $flightID, $seatNum) {
 		$insertData = array(
@@ -174,6 +176,20 @@ class AirUofT_Model extends CI_Model {
 			"flight_id" => $flightID,
 			"seat" => $seatNum
 		);
+		
+		$selectData = array(
+			"flight_id" => $flightID,
+			"seat" => $seatNum
+		);
+		
+		// first, make sure that it's not already in the table
+		$items = $this->db->get_where("ticket", $selectData);
+		
+		if ($items->num_rows() > 0) {
+			// then we already inserted this
+			$this->logger->log("FAILED");
+			return 1;
+		}
 		
 		// first, get # of available tickets
 		$q = "SELECT available FROM flight WHERE id=$flightID";
@@ -186,7 +202,7 @@ class AirUofT_Model extends CI_Model {
 		} else {
 			$this->logger->log($flightID, "Flight ID");
 			$this->logger->log("Failed to retrieve # available flights", "E");
-			return false;
+			return 2;
 		}
 		
 		$this->db->trans_start();
@@ -199,7 +215,11 @@ class AirUofT_Model extends CI_Model {
 		
 		$this->db->trans_complete();
 			
-		return $this->db->trans_status();
+		if ($this->db->trans_status()) {
+			return 0;
+		} else {
+			return 2;
+		}
 	}
 	
 	/**
