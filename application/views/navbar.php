@@ -21,8 +21,9 @@
 		// now a hack for erroring out
 		if (validation_errors()) {
 			$thisIndex -= 1;
-			// IDK why eclipse is being weird, but this syntax is fine
-			$title = array_keys($titles)[$thisIndex];
+			// IDK why you can't put these 2 statements on 1 line
+			$arr = array_keys($titles);
+			$title = $arr[$thisIndex];
 		}
 		
 		foreach($titles as $k => $v) {
