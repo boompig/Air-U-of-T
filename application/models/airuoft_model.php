@@ -26,6 +26,8 @@ class AirUofT_Model extends CI_Model {
 			$id = $query->row()->id;
 			$this->campuses[$campus] = intval($id);
 		}
+		
+		date_default_timezone_set("UTC");
 	}
 	
 	/**
@@ -111,18 +113,19 @@ class AirUofT_Model extends CI_Model {
 	
 	/**
 	 * Fill the flight table for the next 14 days with the relevant information.
+	 * Delete all previous flights.
 	 * Return true iff successful.
 	 */
-	function fill_flights() {
-		// TODO I think this needs to be have some kind of check for 'if exists'
-		// i.e. if there are already flights in the table, what is the expected behaviour???
-		// what it does right now is adds flights on top of existing guy
+	function fill_flights () {
+		if (! $this->delete_flights_and_tickets()) {
+			return false;
+		}
 		
 		$this->db->trans_start();
-		date_default_timezone_set("UTC");
+		
 		$date = new DateTime(date("Y-m-d"));
 				
-		foreach (range (1, 15) as $i) {
+		foreach (range (1, 14) as $i) {
 			date_add($date, date_interval_create_from_date_string("1 day"));
 			
 			foreach (range (1, 8) as $j) {

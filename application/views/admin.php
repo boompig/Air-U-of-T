@@ -4,6 +4,8 @@ header('Pragma: no-cache'); // HTTP 1.0.
 header('Expires: 0'); // Proxies.
 
 $this->load->model("html_utils");
+
+$_SESSION["title"] = "Admin Portal";
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +69,9 @@ $this->load->model("html_utils");
 	</head>
 	
 	<body>
-		<h1 id="title">Air U of T Admin Portal</h1>
+		<?php 
+			$this->load->view("header.php"); 
+		?>
 		
 		<div id="content">
 			<?php
@@ -109,6 +113,10 @@ $this->load->model("html_utils");
 				<?php
 					$contents = HTML_Utils::span("", array ("class" => array("ui-icon", "ui-icon-unlocked")));
 					echo anchor("airuoft/index", $contents, array("title" => "customer portal"));
+					
+					$classes = array ("ui-icon", "ui-icon-arrowreturn-1-n");
+					$contents = HTML_Utils::span("", array("class" => $classes));
+					echo anchor("admin/insert_tickets", $contents, array("title" => "insert sample data"));
 				?>
 			</div>
 		</div> <!-- end content -->

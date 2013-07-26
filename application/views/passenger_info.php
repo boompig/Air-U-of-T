@@ -224,18 +224,6 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 						$data = HTML_Utils::get_dropdown_options (array ("id" => "expMonth", "class" => "ccExp"));
 						echo form_dropdown("expMonth", $monthOptions, $_SESSION['expMonth'], $data);
 						
-						// $arr = HTML_Utils::get_input_array("expMonth");
-						// $arr['required'] = 'required';
-						// $arr['value'] = $_SESSION['expMonth'];
-						// $arr['size'] = 2;
-						// $arr['maxlength'] = 2;
-						// $arr['min'] = 1;
-						// $arr['max'] = 12;
-						// $arr['pattern'] = "\d{2}";
-						// $arr['class'] = 'ccExp';
-						// $arr['placeholder'] = "mm";
-						// echo form_input($arr);
-						
 						echo "<span>&nbsp;/&nbsp;</span>";
 						
 						$yearOptions = array();
@@ -256,17 +244,6 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 						
 						$data = HTML_Utils::get_dropdown_options (array ("id" => "expYear", "class" => "ccExp"));
 						echo form_dropdown("expYear", $yearOptions, $_SESSION['expYear'], $data);
-						
-						
-						// $arr = HTML_Utils::get_input_array("expYear");
-						// $arr['required'] = 'required';
-						// $arr['value'] = $_SESSION['expYear'];
-						// $arr['size'] = 2;
-						// $arr['maxlength'] = 2;
-						// $arr['pattern'] = "\d{2}";
-						// $arr['class'] = 'ccExp';
-						// $arr['placeholder'] = "yy";
-						// echo form_input($arr);
 						
 						echo "<input type='hidden' name='ccExp' id='ccExp' value='" . $_SESSION['ccExp'] . "' />";
 					?>

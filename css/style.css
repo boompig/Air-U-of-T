@@ -13,12 +13,22 @@ h1, h2 {
 }
 
 header {
+	width: 60%;
 	margin: 0 auto;
 	text-align: center;
 }
 
-header h1 {
+header .titleText {
 	display: inline-block;
+}
+
+header h1 {
+	font-size: 2em;
+}
+
+header h2, header h3 {
+	font-size: 1.5em;
+	color: #666;
 }
 
 header a {
@@ -32,6 +42,11 @@ header img {
 	padding: 0;
 	
 	width: 45px;
+}
+
+header img.admin {
+	height: 3.5em;
+	width: 5em;
 }
 
 select, option, input[type=text], input[type=date], input[type=number] {

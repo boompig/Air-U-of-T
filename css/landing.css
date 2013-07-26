@@ -9,8 +9,8 @@ div {
 	/*border: 1px solid #000;*/
 }
 
-header h1 {
-	margin: 4% 0 0 0;
+header {
+	margin-top: 4%;
 }
 
 #searchPanel {
