@@ -6,7 +6,7 @@ Second assignment for CSC309
 ## Collaborators
 
 * Daniel Kats (CDF ID g1dbkats) (student number 997492468)
-* Jacky Fong (CDF ID c8fongkw) (student number 991686118)
+
 ## Assignment Specs
 
 * See [CSC309 Website] [1]
