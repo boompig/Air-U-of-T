@@ -89,6 +89,7 @@ $this->load->model("html_utils");
 	</head>
 	
 	<body>
+		<?php $this->load->view("header.php"); ?>
 		<?php $this->load->view("navbar.php"); ?>
 		
 		<div id="content">

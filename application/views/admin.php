@@ -34,6 +34,8 @@ $this->load->model("html_utils");
 				// add pretty JQuery UI stuff
 				$("button, input[type=submit]").button();
 				
+				$(document).tooltip();
+				
 				// create initial dialog
 				$("#dialog-confirm-delete").dialog({
 					autoOpen: false,

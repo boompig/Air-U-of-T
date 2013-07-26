@@ -165,8 +165,7 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 	</head>
 	
 	<body>
-		<h1>Passenger Info</h1>
-		
+		<?php $this->load->view("header.php"); ?>
 		<?php $this->load->view("navbar") ?>
 		
 		<div id="container">

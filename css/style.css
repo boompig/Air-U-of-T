@@ -12,6 +12,28 @@ h1, h2 {
 	text-align: center;
 }
 
+header {
+	margin: 0 auto;
+	text-align: center;
+}
+
+header h1 {
+	display: inline-block;
+}
+
+header a {
+	display: inline-block;
+	padding: 0;
+	margin: 0 15px 0 0;
+}
+
+header img {
+	margin: 0;
+	padding: 0;
+	
+	width: 45px;
+}
+
 select, option, input[type=text], input[type=date], input[type=number] {
 	font-size: 1em;
 }

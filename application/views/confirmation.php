@@ -83,8 +83,8 @@ function showVals($arr, $edit=true) {
 	</head>
 	
 	<body>
-		<h1><?=$title?></h1>
-		
+		<!-- <h1><?=$title?></h1> -->
+		<?php $this->load->view("header.php"); ?>
 		<?php $this->load->view("navbar"); ?>
 		
 		<div id="content">

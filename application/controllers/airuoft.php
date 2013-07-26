@@ -101,8 +101,6 @@ class AirUofT extends CI_Controller {
 			return false;
 		}
 		
-		$this->logger->log($flightDate, "Date");
-		
 		$today = new DateTime();
 		$today->setTime(0, 0, 0);
 		$flightDate->setTime(0, 0, 0);

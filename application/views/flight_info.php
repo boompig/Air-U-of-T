@@ -71,8 +71,7 @@ $logger = FirePHP::getInstance(true);
 	</head>
 	
 	<body>
-		<h1>Choose a Flight</h1>
-		
+		<?php $this->load->view("header.php"); ?>
 		<?php $this->load->view("navbar.php"); ?>
 		
 		<div id="searchPanel">
