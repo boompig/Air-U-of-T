@@ -67,7 +67,7 @@ label {
 }
 
 footer {
-	margin-top: 10%;
+	margin-top: 7%;
 }
 
 foooter a, .ui-icon {
@@ -77,4 +77,9 @@ foooter a, .ui-icon {
 footer a {
 	color: black;
 	text-decoration: none;
+}
+
+footer .ui-icon {
+	display: inline-block;
+	cursor: pointer;
 }

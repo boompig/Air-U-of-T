@@ -28,6 +28,7 @@ $this->load->model("html_utils");
 		<!-- custom style -->
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/style.css" />
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/navbar.css" />
+		<link rel="stylesheet" href="<?=base_url(); ?>/css/error_box.css" />
 		<link rel="stylesheet" href="<?=base_url(); ?>/css/seats.css" />
 		
 		<!-- custom scripts -->
@@ -94,7 +95,7 @@ $this->load->model("html_utils");
 			<div id="instructionsPanel">
 				<h2>Choose a Seat</h2>
 				
-				<?=form_open("airuoft/customerInfo"); ?>
+				<?=HTML_Utils::form_open("airuoft/customerInfo"); ?>
 				<div id="seatContainer" style="display: none;">
 					<?php
 						$data = HTML_Utils::get_input_array("seatNum");
@@ -103,7 +104,7 @@ $this->load->model("html_utils");
 						$data["pattern"] = "/\d/";
 						$data["size"] = 1;
 						
-						echo form_label("Seat: ", "seat");
+						echo form_label("Seat: ", "seatNum");
 						echo form_input($data);
 					?>
 				</div>
@@ -113,6 +114,8 @@ $this->load->model("html_utils");
 					echo form_submit($attrs);
 					echo form_close();
 				?>
+				
+				<?php $this->load->view("error_box.php"); ?>
 				
 				<div id="selectionHelp" class="ui-state-highlight ui-corner-all">
 					<span class="ui-icon ui-icon-info"></span>

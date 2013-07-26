@@ -58,13 +58,32 @@ class AirUofT extends CI_Controller {
 	 * Return true iff the given campus is a valid campus.
 	 * Used for form validation.
 	 */
-	function validCampus($campus) {
-		$result = key_exists($campus, $this->campuses);
+	function validCampus ($campus) {
+		$result = isset($this->campuses[$campus]);
 		if (! $result) {
-			$this->form_validation->set_message($this->getHackerMessage("campus field"));
+			$this->form_validation->set_message("validCampus", $this->getHackerMessage("campus field"));
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * Return true iff $toCampus != $fromCampus
+	 */
+	function differentCampuses ($toCampus) {
+		if (func_num_args() > 1 && func_get_arg(1)) {
+			$fromCampus = func_get_arg(1);
+			$this->logger->log($fromCampus, "from (numargs)");
+		} else {
+			$fromCampus = $_REQUEST['from'];
+		}
+		
+		if ($fromCampus === $toCampus) {
+			$this->form_validation->set_message("differentCampuses", "Departure and arrival campuses must be different");
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	/**
@@ -81,6 +100,8 @@ class AirUofT extends CI_Controller {
 			$this->form_validation->set_message("validFlightDate", "The departure date has to be in the format yyyy-mm-dd");
 			return false;
 		}
+		
+		$this->logger->log($flightDate, "Date");
 		
 		$today = new DateTime();
 		$today->setTime(0, 0, 0);
@@ -164,10 +185,11 @@ class AirUofT extends CI_Controller {
 	 * Return true iff the $seatNum is one of the available seats.
 	 */
 	function validSeat ($seatNum) {
+		$this->logger->log($seatNum);
 		$result = in_array($seatNum, $_SESSION['validSeats']);
 		
 		if(! $result) {
-			$this->form_validation->set_message("validFlightID", $this->getHackerMessage("seat"));
+			$this->form_validation->set_message("validSeat", $this->getHackerMessage("seat"));
 		}
 		
 		return $result;
@@ -228,7 +250,7 @@ class AirUofT extends CI_Controller {
 	function searchFlights () {
 		$this->load->library("form_validation");
 		$this->form_validation->set_rules("from", "Departure Campus", "required|callback_validCampus");
-		$this->form_validation->set_rules("to", "Destination Campus", "required|callback_validCampus");
+		$this->form_validation->set_rules("to", "Destination Campus", "required|callback_validCampus|callback_differentCampuses");
 		$this->form_validation->set_rules("date", "Departure Date", "required|callback_validFlightDate");
 		$this->form_validation->set_error_delimiters("<div class='error'>", "</div>");
 		
@@ -238,7 +260,7 @@ class AirUofT extends CI_Controller {
 			// unfortunately, there is no data integrity in date, from, to (because they are saved prior to validation)
 			// which means we have to re-validate them
 			$fromValid = isset($_SESSION["from"]) && $this->validCampus($_SESSION['from']);
-			$toValid = isset($_SESSION["to"]) && $this->validCampus($_SESSION['to']);
+			$toValid = isset($_SESSION["to"]) && $this->validCampus($_SESSION['to']) && $this->differentCampuses($_SESSION['to'], $_SESSION['from']);
 			$dateValid = isset($_SESSION["date"]) && $this->validFlightDate($_SESSION['date']);
 			
 			$noValidate = func_get_arg(0) && $fromValid && $toValid && $dateValid;
@@ -281,6 +303,7 @@ class AirUofT extends CI_Controller {
 		$this->load->library("form_validation");
 		$this->form_validation->set_rules("flightID", "Flight Time", "required|callback_validFlightID");
 		$this->form_validation->set_rules("time", "Flight Time", "required|callback_validFlightTime");
+		$this->form_validation->set_error_delimiters("<div class='error'>", "</div>");
 		
 		if (func_num_args() > 0) {
 			// this means we got here by navigation
@@ -327,6 +350,7 @@ class AirUofT extends CI_Controller {
 	function customerInfo () {
 		$this->load->library("form_validation");
 		$this->form_validation->set_rules("seatNum", "Seat Number", "required|callback_validSeat");
+		$this->form_validation->set_error_delimiters("<div class='error'>", "</div>");
 		
 		if (func_num_args() > 0) {
 			// means we got here by navigation
@@ -364,6 +388,7 @@ class AirUofT extends CI_Controller {
 		$this->form_validation->set_rules("expMonth", "Credit Card Expiration Month", "required");
 		$this->form_validation->set_rules("expYear", "Credit Card Expiration Year", "required");
 		$this->form_validation->set_rules("ccExp", "Credit Card Expiration Date", "required|callback_validExpiration");
+		$this->form_validation->set_error_delimiters("<div class='error'>", "</div>");
 		
 		$this->saveRequest(array("fName", "lName", "ccNum", "ccExp", "expMonth", "expYear"));
 		

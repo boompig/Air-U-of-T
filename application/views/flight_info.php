@@ -66,10 +66,6 @@ $logger = FirePHP::getInstance(true);
 					$("#flightID").val(flightID);
 					$("#seatForm").submit();
 				});
-				
-				// $("form").submit(function() {
-					// f.validate_inputs();
-				// });
 			});
 		</script>
 	</head>
@@ -82,7 +78,7 @@ $logger = FirePHP::getInstance(true);
 		<div id="searchPanel">
 			<div id="toolbar">
 				<?php
-					echo form_open("airuoft/searchFlights");
+					echo HTML_Utils::form_open("airuoft/searchFlights");
 				?>
 				
 				<div id="fromPanel" class="inputPanel">
@@ -146,7 +142,7 @@ $logger = FirePHP::getInstance(true);
 				Whoops! There were no flights matching your search. Consider changing your departure date.
 			</div>
 			
-			<?=form_open("airuoft/searchSeats", array("id" => 'seatForm')); ?>
+			<?=HTML_Utils::form_open("airuoft/searchSeats", array("id" => 'seatForm')); ?>
 				<input type="hidden" name="time" id="time" value="" required="required" pattern="\d{2}\:00\:00" />
 				<input type="hidden" name="flightID" id="flightID" value="" required="required" pattern="\d+" />
 			<?=form_close(); ?>

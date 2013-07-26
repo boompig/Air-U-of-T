@@ -18,6 +18,13 @@
 		$thisIndex = array_search($title, array_keys($titles));
 		$i = 0;
 		
+		// now a hack for erroring out
+		if (validation_errors()) {
+			$thisIndex -= 1;
+			// IDK why eclipse is being weird, but this syntax is fine
+			$title = array_keys($titles)[$thisIndex];
+		}
+		
 		foreach($titles as $k => $v) {
 			$arr = array ("class" => array("navItem"));
 			

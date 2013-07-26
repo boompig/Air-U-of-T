@@ -124,6 +124,24 @@ Date.randomFutureDate = function () {
 };
 
 /**
+ * Get a random date in the next 2 weeks.
+ * @returns {Date}
+ */
+Date.randomNearFutureDate = function () {
+	var day = Math.randInt(1, 14);
+	var today = new Date();
+	today.setDate(today.getDate() + day);
+	return today;
+};
+
+/**
+ * Return a random value from ['UTM', 'UTSG']
+ */
+Utils.randomCampus = function () {
+	return Utils.randomChoice(["UTM", "UTSG"]);
+};
+
+/**
  * Return a new string which is right-padded to `num` characters.
  * Default character is "0"
  * 

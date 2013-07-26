@@ -15,21 +15,29 @@ Flight.changeOtherCampus = function (field, value) {
 	
 	var otherField, otherValue;
 	otherField = Flight.otherCampusField(field);
-	
-	if (value == "UTSG") {
-		otherValue = "UTM";
-	} else if (value == "UTM") {
-		otherValue = "UTSG";
-	} else {
-		otherValue = "";
-	}
+	otherValue = Flight.otherCampus(value);
 	
 	$("#" + otherField).find("option[value='{0}']".format(otherValue)).prop("selected", true);
 };
 
 /**
+ * Return the complimentary campus to this one.
+ * @returns {String}
+ */
+Flight.otherCampus = function (thisCampus) {
+	if (thisCampus == "UTSG") {
+		return "UTM";
+	} else if (thisCampus == "UTM") {
+		return "UTSG";
+	} else {
+		return "";
+	}
+};
+
+/**
  * Return the name of the complimentary campus field.
  * @param {String} thisField Name of this field
+ * @returns {String}
  */
 Flight.otherCampusField = function (thisField) {
 	return thisField == "to" ? "from" : "to";
@@ -50,6 +58,8 @@ Flight.setupCampusChooser = function (selector) {
 		
 		// revalidate complimentary field
 		var otherField = Flight.otherCampusField($(this).attr("id"));
-		$("#" + otherField).valid();
+		if (! $("form").is("[novalidate]")) {
+			$("#" + otherField).valid();
+		}
 	});
 };

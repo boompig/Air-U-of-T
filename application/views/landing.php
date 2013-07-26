@@ -53,6 +53,8 @@ foreach (array("from", "to", "date", "time") as $k) {
 		
 		<script>
 			function addValidator () {
+				"use strict";
+				
 				$("form").validate({
 					"rules" : {
 						"date" : {
@@ -71,6 +73,31 @@ foreach (array("from", "to", "date", "time") as $k) {
 						}
 					}
 				});
+			}
+			
+			function junkFill () {
+				"use strict";
+				
+				var campus;
+				var fields = ["to", "from"];
+				
+				for (var i = 0; i < fields.length; i++) {
+					if (i === 0) {
+						campus = Utils.randomCampus();
+					} else {
+						campus = Flight.otherCampus(campus);
+					}
+					
+					$("#" + fields[i]).find("option[value={0}]".format(campus)).prop("selected", true);
+				}
+				
+				// get a day after today's date
+				var randDate = Date.randomNearFutureDate();
+				var year = String(randDate.getFullYear());
+				var month = (String(randDate.getMonth() + 1)).pad(2, "0");
+				var day = (String(randDate.getDate())).pad(2, "0");
+				
+				$("#date").val("{0}-{1}-{2}".format(year, month, day));
 			}
 		
 			$(function() {
@@ -113,6 +140,12 @@ foreach (array("from", "to", "date", "time") as $k) {
 				<?=HTML_Utils::pentestComment() ?>addValidator();
 				
 				$("input[type=submit], button").button();
+				
+				$("#autofill").click(function() {
+					junkFill();
+				});
+				
+				$(document).tooltip();
 			});
 		</script>
 	</head>
@@ -174,10 +207,11 @@ foreach (array("from", "to", "date", "time") as $k) {
 		</div> <!-- end search panel -->
 		
 		<footer>
+			<span id="autofill" class="ui-icon ui-icon-pencil" title="Fill with junk"></span>
 			<?php
-				// $contents = "<span class='ui-icon ui-icon-pencil'></span>";
-				$contents = ".";
-				echo anchor("airuoft/reset", $contents, array("title" => "reset"));
+					$contents = "<span class='ui-icon ui-icon-trash' title='reset'>";
+					echo anchor("airuoft/reset", $contents, array("title" => "reset"));
+				echo "</span>";
 			?>
 		</footer>
 	</body>
