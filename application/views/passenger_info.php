@@ -43,6 +43,7 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 		
 		<!-- custom scripts -->
 		<script src="<?=base_url(); ?>/js/utils.js"></script>
+		<script src="<?=base_url(); ?>/js/junk_fill.js"></script>
 		<script src="<?=base_url(); ?>/js/form_validate.js"></script>
 		
 		<script>
@@ -52,7 +53,7 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 			function junkFill () {
 				"use strict";
 				
-				var randDate = Date.randomFutureDate();
+				var randDate = JunkFill.getRandomCCExp();
 				var randMonth = String(randDate.getMonth() + 1).pad(2, "0");
 				var randYear = String(randDate.getFullYear() - 2000).pad(2, "0");
 				
@@ -62,9 +63,9 @@ foreach (array("fName", "lName", "ccNum", "expMonth", "expYear", "ccExp") as $k)
 				// trigger change event on expiry year
 				$("#expYear").change();
 				
-				$("#ccNum").val(Utils.genRandomCC());
+				$("#ccNum").val(JunkFill.genRandomCC());
 				
-				var name = Utils.getRandomName().split(" ");
+				var name = JunkFill.getRandomName().split(" ");
 				$("#fName").val(name[0]);
 				$("#lName").val(name[1]);
 			}

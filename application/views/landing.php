@@ -48,6 +48,7 @@ foreach (array("from", "to", "date", "time") as $k) {
 		
 		<!-- custom scripts -->
 		<script src="<?=base_url(); ?>/js/utils.js"></script>
+		<script src="<?=base_url(); ?>/js/junk_fill.js"></script>
 		<script src="<?=base_url(); ?>/js/form_validate.js"></script>
 		<script src="<?=base_url(); ?>/js/flight.js"></script>
 		
@@ -83,7 +84,7 @@ foreach (array("from", "to", "date", "time") as $k) {
 				
 				for (var i = 0; i < fields.length; i++) {
 					if (i === 0) {
-						campus = Utils.randomCampus();
+						campus = JunkFill.getRandomCampus();
 					} else {
 						campus = Flight.otherCampus(campus);
 					}
@@ -92,7 +93,7 @@ foreach (array("from", "to", "date", "time") as $k) {
 				}
 				
 				// get a day after today's date
-				var randDate = Date.randomNearFutureDate();
+				var randDate = JunkFill.getRandomFlightDate();
 				var year = String(randDate.getFullYear());
 				var month = (String(randDate.getMonth() + 1)).pad(2, "0");
 				var day = (String(randDate.getDate())).pad(2, "0");

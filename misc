@@ -7,6 +7,14 @@ cat /var/log/apache2/error_log
 ## on Linux:
 cat /var/log/apache2/error.log
 
-# sql to get all duplicate tickets
+-- sql to get all duplicate tickets
 SELECT * FROM ticket A WHERE EXISTS (SELECT * FROM ticket B WHERE A.id<>B.id AND A.flight_id=B.flight_id AND A.seat=B.seat);
 
+-- sql to get all duplicate flights
+SELECT * FROM flight A WHERE EXISTS (SELECT * FROM flight B WHERE A.id<>B.id AND A.timetable_id=B.timetable_id AND A.date=B.date);
+
+-- sql to insert a duplicate flight
+INSERT INTO flight (timetable_id, date, available) SELECT timetable_id, date, available FROM flight LIMIT 1;
+
+-- sql to *not* insert a duplicate flight
+INSERT INTO flight (timetable_id, date, available) SELECT timetable_id, date, available FROM flight LIMIT 1;
