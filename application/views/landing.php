@@ -151,7 +151,7 @@ foreach (array("from", "to", "date", "time") as $k) {
 	</head>
 	
 	<body>
-		<h1 id="title">Air U of T</h1>
+		<?php $this->load->view("header.php"); ?>
 		
 		<div id="logoContainer">
 			<!-- <img id="logo" src="<?=base_url() ?>/images/blacksheep.jpg" /> -->

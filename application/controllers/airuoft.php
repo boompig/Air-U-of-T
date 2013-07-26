@@ -183,7 +183,6 @@ class AirUofT extends CI_Controller {
 	 * Return true iff the $seatNum is one of the available seats.
 	 */
 	function validSeat ($seatNum) {
-		$this->logger->log($seatNum);
 		$result = in_array($seatNum, $_SESSION['validSeats']);
 		
 		if(! $result) {
@@ -427,7 +426,6 @@ class AirUofT extends CI_Controller {
 	 * i.e. If summary is refreshed, do not add another item to the DB
 	 */
 	function buyTicket () {
-		$this->logger->log($_SESSION['lastView'], 'last view');
 		$data = array("title" => "Summary");
 		
 		if (isset($_SESSION['lastView']) && $_SESSION['lastView'] != 'summary') {
@@ -435,7 +433,7 @@ class AirUofT extends CI_Controller {
 			$this->load->model("airuoft_model");
 			$result = $this->airuoft_model->create_ticket($_SESSION['fName'], $_SESSION['lName'], $_SESSION['ccNum'], $_SESSION['expMonth'] . $_SESSION['expYear'], $_SESSION['flightID'], $_SESSION['seatNum']);
 			
-			$this->logger->log($result, "result");
+			
 			
 			if ($result === 0) {
 				$this->logger->log("It's Good!", "Ticket Result");
@@ -448,7 +446,8 @@ class AirUofT extends CI_Controller {
 				$data = array("errMsg" => "Sorry, someone already reserved the same seat on the same flight. Try selecting a different seat.");
 				
 				$this->load->view("error", $data);
-			} else if ($result === 2) {
+			} else if ($result > 1) {
+				$this->logger->log($result, "result");
 				$this->logger->log("Failed =.=", "Ticket Result");
 				
 				// TODO give more descriptive feedback here

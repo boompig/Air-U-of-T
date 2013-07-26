@@ -29,11 +29,13 @@ function showVals($arr, $edit=true) {
 		}
 		
 		echo "<tr>";
-			echo "<td>";
-			if ($edit && $v == "seatNum") {
-				echo anchor("airuoft/searchSeats", "<span class='ui-icon ui-icon-pencil' title='Change your seat'></span>");
-			}
-			echo "</td>";
+			// echo "<td>";
+			// if ($edit && $v == "seatNum") {
+				// echo anchor("airuoft/searchSeats/1", "<span class='ui-icon ui-icon-pencil' title='Change your seat'></span>");
+			// } else if ($edit && $v)
+			
+			
+			// echo "</td>";
 		
 			echo "<td><span class='userField $k'>$k</span></td>";
 			echo "<td><span class='userVal $k'>$val</span></td>";
