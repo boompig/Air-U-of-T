@@ -2,6 +2,8 @@
 header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
 header('Pragma: no-cache'); // HTTP 1.0.
 header('Expires: 0'); // Proxies.
+
+$this->load->model("html_utils");
 ?>
 
 <!DOCTYPE html>
@@ -99,7 +101,14 @@ header('Expires: 0'); // Proxies.
 						}
 					?>
 				</p>
+			</div> <!-- end confirmation -->
+			
+			<div id="bottom">
+				<?php
+					$contents = HTML_Utils::span("", array ("class" => array("ui-icon", "ui-icon-unlocked")));
+					echo anchor("airuoft/index", $contents, array("title" => "customer portal"));
+				?>
 			</div>
-		</div>
+		</div> <!-- end content -->
 	</body>
 </html>

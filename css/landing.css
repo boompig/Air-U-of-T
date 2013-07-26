@@ -79,7 +79,8 @@ footer a {
 	text-decoration: none;
 }
 
-footer .ui-icon {
+footer .bottom-nav {
 	display: inline-block;
 	cursor: pointer;
+	margin-right: 10px;
 }

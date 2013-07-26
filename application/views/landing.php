@@ -207,11 +207,19 @@ foreach (array("from", "to", "date", "time") as $k) {
 		</div> <!-- end search panel -->
 		
 		<footer>
-			<span id="autofill" class="ui-icon ui-icon-pencil" title="Fill with junk"></span>
 			<?php
-					$contents = "<span class='ui-icon ui-icon-trash' title='reset'>";
-					echo anchor("airuoft/reset", $contents, array("title" => "reset"));
-				echo "</span>";
+				
+				$classes = array ("ui-icon", "ui-icon-pencil", "bottom-nav");
+				$contents = HTML_Utils::span("", array("id" => "autofill", "title" => "autofill", "class" => $classes));
+				echo $contents;
+			
+				$classes = array ("ui-icon", "ui-icon-trash", "bottom-nav");
+				$contents = HTML_Utils::span("", array("title" => "reset", "class" => $classes));
+				echo anchor("airuoft/reset", $contents, array("title" => "reset"));
+				
+				$classes = array ("ui-icon", "ui-icon-locked", "bottom-nav");
+				$contents = HTML_Utils::span("", array("title" => "admin portal", "class" => $classes));
+				echo anchor("admin/admin", $contents, array("title" => "admin portal"));
 			?>
 		</footer>
 	</body>

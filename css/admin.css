@@ -71,3 +71,12 @@ td.ccExpDate, td.seatNum {
 	width: 180px;
 	text-align: center;
 }
+
+#bottom {
+	margin: 20px auto 0 auto;
+	text-align: center;
+}
+
+#bottom .ui-icon, #bottom a {
+	display: inline-block;
+}
