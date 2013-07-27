@@ -19,23 +19,23 @@ $edit = $title == "Confirmation";
  * @param {bool} $edit
  */
 function showVals($arr, $edit=true) {
+	$campuses = array(
+		"UTSG" => "St. George",
+		"UTM" => "Mississauga"
+	);
+	
 	echo "<table>";
 	
 	foreach ($arr as $k => $v) {
 		if ($v == "expDate") {
 			$val = $_SESSION['expMonth'] . "/" . $_SESSION['expYear'];
+		} else if ($v === "to" || $v === "from") {
+			$val = $campuses[$_SESSION[$v]];
 		} else {
 			$val = $_SESSION[$v];
 		}
 		
 		echo "<tr>";
-			// echo "<td>";
-			// if ($edit && $v == "seatNum") {
-				// echo anchor("airuoft/searchSeats/1", "<span class='ui-icon ui-icon-pencil' title='Change your seat'></span>");
-			// } else if ($edit && $v)
-			
-			
-			// echo "</td>";
 		
 			echo "<td><span class='userField $k'>$k</span></td>";
 			echo "<td><span class='userVal $k'>$val</span></td>";
