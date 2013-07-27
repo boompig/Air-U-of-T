@@ -192,9 +192,9 @@ foreach (array("from", "to", "date", "time") as $k) {
 					echo form_input($arr);
 				?>
 				<!-- empty link to get icon -->
-				<a href="#">
-					<span class="ui-state-default ui-corner-all ui-icon ui-icon-calendar"></span>
-				</a>
+				<!-- <a href="#"> -->
+					<!-- <span class="ui-state-default ui-corner-all ui-icon ui-icon-calendar"></span> -->
+				<!-- </a> -->
 			</div> <!-- end datePanel -->
 			<div id="submitPanel" class="inputPanel">
 				<?php

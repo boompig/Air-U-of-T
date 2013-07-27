@@ -64,11 +64,8 @@ tbody tr:hover {
 	background-color: #DFEFFC;
 }
 
-input[type=text] {
-	padding-left: 3px;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	padding-right: 5px;
+#date {
+	padding: 3px 2px;
 }
 
 .error {

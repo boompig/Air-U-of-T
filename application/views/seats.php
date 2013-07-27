@@ -50,6 +50,7 @@ $this->load->model("html_utils");
 		
 			$(function() {
 				$("#seatButtons").selectable({
+					"filter" : ".available",
 					"selected" : function (e, elem) {
 						var seatIndex = $(".seatButton").index(elem.selected);
 						
