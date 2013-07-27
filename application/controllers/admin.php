@@ -1,9 +1,5 @@
 <?php
 
-// TODO for development, create link with FirePHP Console
-// dirty hack here to get this to work
-require_once("../FirePHPCore/FirePHP.class.php");
-
 /**
  * Main controller for Air U of T project (AKA CSC309 A2)
  */
@@ -13,9 +9,6 @@ class Admin extends CI_Controller {
 	 */
 	function __construct () {
 		parent::__construct();
-		
-		// TODO for development, create link with FirePHP Console
-		$this->logger = FirePHP::getInstance(true);
 	}
 	
 	/**
@@ -65,8 +58,6 @@ class Admin extends CI_Controller {
 			$d = $ticket['ccExpDate'];
 			$ticket['ccExpDate'] = substr($d, 0, 2) . "/" . substr($d, 2, 2);
 		}
-		
-		$this->logger->log($data["tickets"], "Tickets");
 		
 		$this->load->view("soldtickets", $data);
 	}

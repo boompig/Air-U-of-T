@@ -1,15 +1,10 @@
 <?php
 
-// TODO for development, create link with FirePHP Console
-// dirty hack here to get this to work
-require_once("../FirePHPCore/FirePHP.class.php");
-
 /**
  * Main controller for Air U of T project (AKA CSC309 A2)
  */
 class AirUofT extends CI_Controller {
 	
-	private $logger;
 	/**
 	 * @returns {array}
 	 */
@@ -34,9 +29,6 @@ class AirUofT extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 		session_start();
-		
-		// TODO for development, create link with FirePHP Console
-		$this->logger = FirePHP::getInstance(true);
 		
 		$this->campuses = array("UTSG" => "St. George", "UTM" => "Mississauga");
 		$this->flightTimes = array(8, 10, 14, 17);
@@ -73,7 +65,6 @@ class AirUofT extends CI_Controller {
 	function differentCampuses ($toCampus) {
 		if (func_num_args() > 1 && func_get_arg(1)) {
 			$fromCampus = func_get_arg(1);
-			$this->logger->log($fromCampus, "from (numargs)");
 		} else {
 			$fromCampus = $_REQUEST['from'];
 		}
@@ -205,11 +196,11 @@ class AirUofT extends CI_Controller {
 	}
 	
 	function logSession() {
-		$this->logger->log($_SESSION, "session");
+		//$this->logger->log($_SESSION, "session");
 	}
 	
 	function logRequest() {
-		$this->logger->log($_REQUEST, "request");
+		//$this->logger->log($_REQUEST, "request");
 	}
 	
 	/**
@@ -308,7 +299,7 @@ class AirUofT extends CI_Controller {
 			// however, we know that $_SESSION for these vars only set when they are valid
 			// so can just check if they are set
 			$flightValid = isset($_SESSION['flightID']) && isset($_SESSION['time']);
-			$this->logSession();
+			//$this->logSession();
 			
 			$noValidate = func_get_arg(0) && $flightValid;
 		} else {
@@ -436,20 +427,14 @@ class AirUofT extends CI_Controller {
 			
 			
 			if ($result === 0) {
-				$this->logger->log("It's Good!", "Ticket Result");
 				$_SESSION['lastView'] = 'summary';
 				
 				$this->load->view("confirmation", $data);
 			} else if ($result === 1) {
-				$this->logger->log("Failed =.=", "Ticket Result");
-				
 				$data = array("errMsg" => "Sorry, someone already reserved the same seat on the same flight. Try selecting a different seat.");
 				
 				$this->load->view("error", $data);
 			} else if ($result > 1) {
-				$this->logger->log($result, "result");
-				$this->logger->log("Failed =.=", "Ticket Result");
-				
 				// TODO give more descriptive feedback here
 				$data = array("errMsg" => "Unknown DB error");
 				

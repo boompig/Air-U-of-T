@@ -1,9 +1,5 @@
 <?php
 
-// TODO for development, create link with FirePHP Console
-// dirty hack here to get this to work
-require_once("../FirePHPCore/FirePHP.class.php");
-
 /**
  * A general class to access the various DBs and fetch some data from them, for the Air U of T application.
  */
@@ -15,9 +11,6 @@ class AirUofT_Model extends CI_Model {
 	
 	function __construct () {
 		parent::__construct();
-		
-		// TODO for development, create link with FirePHP Console
-		$this->logger = FirePHP::getInstance(true);
 		
 		// to start with, have a mapping of campus names to campus IDs
 		foreach (array("UTSG" => "St. George", "UTM" => "Mississauga") as $campus => $campusFullName) {
@@ -101,7 +94,7 @@ class AirUofT_Model extends CI_Model {
 		$times = array();
 		
 		if ($query->num_rows() == 0) {
-			$this->logger->log($q, "No result set on fetching flights with this query: ");
+            // TODO notify user somehow
 		} else {
 			foreach ($query->result() as $row) {
 				$times[$row->flightID] = array("time" => $row->departureTime, "numSeats" => $row->numSeats);
@@ -139,7 +132,7 @@ class AirUofT_Model extends CI_Model {
 		$result = $this->db->trans_status();
 		
 		if (! $result) {
-			$this->logger->log("Populating flight table failed" ,"");
+            // TODO notify user somehow
 		}
 		
 		return $result;
@@ -190,7 +183,6 @@ class AirUofT_Model extends CI_Model {
 		
 		if ($items->num_rows() > 0) {
 			// then we already inserted this
-			$this->logger->log("FAILED");
 			return 1;
 		}
 		
@@ -203,8 +195,6 @@ class AirUofT_Model extends CI_Model {
 		if ($result->num_rows() > 0) {
 			$n = $result->row(0)->available;
 		} else {
-			$this->logger->log($flightID, "Flight ID");
-			$this->logger->log("Failed to retrieve # available flights", "E");
 			return 2;
 		}
 		
@@ -240,7 +230,7 @@ class AirUofT_Model extends CI_Model {
 		$tickets = array();
 		
 		if ($query->num_rows() == 0) {
-			$this->logger->log($q, "No result set on fetching tickets with this query: ");
+            // TODO notify the user
 		} else {
 			foreach ($query->result_array() as $row) {
 				$tickets[] = $row;
@@ -265,7 +255,7 @@ class AirUofT_Model extends CI_Model {
 		$result = $this->db->trans_status();
 		
 		if (! $result) {
-			$this->logger->log("Deleting flight and ticket data failed" ,"");
+            // TODO notify user
 		}
 		
 		return $result;

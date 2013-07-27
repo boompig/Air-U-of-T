@@ -11,10 +11,6 @@ $campus_options = array(
 	"UTM" => "Mississauga"
 );
 
-// TODO for development, create link with FirePHP Console
-// dirty hack here to get this to work
-require_once("../FirePHPCore/FirePHP.class.php");
-$logger = FirePHP::getInstance(true);
 ?>
 
 <!DOCTYPE html>
