@@ -38,7 +38,7 @@ class AirUofT extends CI_Controller {
 		date_default_timezone_set("UTC");
 		
 		// whether to keep or not keep pentesting
-		$this->pentest = true;
+		$this->pentest = false;
 		$_SESSION['pentest'] = $this->pentest;
 	}
 	
