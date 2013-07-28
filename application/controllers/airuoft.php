@@ -38,8 +38,8 @@ class AirUofT extends CI_Controller {
 		date_default_timezone_set("UTC");
 		
 		// whether to keep or not keep pentesting
-		$this->pentest = false;
-		$_SESSION['pentest'] = $this->pentest;
+		$this->penTest = false;
+		// $_SESSION['pentest'] = $this->penTest;
 	}
 	
 	function getHackerMessage($field) {
@@ -450,7 +450,8 @@ class AirUofT extends CI_Controller {
 	 * Unset everything from $_SESSION variable. Start over.
 	 */
 	function reset () {
-		$_SESSION = array("pentest" => $this->pentest);
+		// $_SESSION = array("pentest" => $this->penTest);
+		$_SESSION = array();
 		$this->index();
 	}
 }

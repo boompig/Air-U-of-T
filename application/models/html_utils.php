@@ -11,7 +11,9 @@ class HTML_Utils extends CI_Model {
 		if (isset($_SESSION['pentest']) && $_SESSION['pentest']) {
 			return "//";
 		} else {
-			return "console.log('" . $_SESSION['pentest'] . "');";
+			// return "console.log('" . $_SESSION['pentest'] . "');";
+			return "";
+			// return "console.log('" . $_SESSION['pentest'] . "');";
 		}	
 	}
 	
@@ -23,20 +25,23 @@ class HTML_Utils extends CI_Model {
 		// second is a list of attributes
 		// third is a list of hidden fields
 		
-		if (func_num_args() < 3) {
-			$hidden = array();
-		} else {
+		if (func_num_args() === 3 && func_get_arg(2)) {
 			$hidden = func_get_arg(2);
+		} else {
+			$hidden = array();
 		}
 		
-		if (func_num_args() < 2) {
-			$attrs = array();
-		} else {
+		if (func_num_args() >= 2 && func_get_arg(1)) {
 			$attrs = func_get_arg(1);
+		} else {
+			$attrs = array();
 		}
+		
+		$attrs["method"] = "POST";
 		
 		if (isset($_SESSION['pentest']) && $_SESSION['pentest']) {
-			$attrs['novalidate'] = 'novalidate';
+			$attrs["pentest"] = $_SESSION['pentest'];
+			$attrs['novalidate'] = $_SESSION['pentest'];
 		}
 		
 		return form_open($location, $attrs, $hidden);
