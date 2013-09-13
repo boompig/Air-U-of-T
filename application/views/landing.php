@@ -218,9 +218,10 @@ foreach (array("from", "to", "date", "time") as $k) {
 				$contents = HTML_Utils::span("", array("title" => "reset", "class" => $classes));
 				echo anchor("airuoft/reset", $contents, array("title" => "reset"));
 				
-				$classes = array ("ui-icon", "ui-icon-locked", "bottom-nav");
-				$contents = HTML_Utils::span("", array("title" => "admin portal", "class" => $classes));
-				echo anchor("admin/admin", $contents, array("title" => "admin portal"));
+                // remove admin portal link from page
+				//$classes = array ("ui-icon", "ui-icon-locked", "bottom-nav");
+				//$contents = HTML_Utils::span("", array("title" => "admin portal", "class" => $classes));
+				//echo anchor("admin/admin", $contents, array("title" => "admin portal"));
 			?>
 		</footer>
 	</body>
